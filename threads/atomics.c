@@ -33,6 +33,8 @@
 
 #include "stdatomic.h"
 
+#if defined(_M_IX86)
+
 #if _M_IX86 < 400
 
 #if _M_IX86 < 300
@@ -721,6 +723,8 @@ __atomic_bit_test_and_clear(volatile atomic_int *obj, unsigned num)
     }
     return result;
 }
+
+#endif
 
 #endif
 
