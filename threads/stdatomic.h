@@ -40,6 +40,9 @@
 #if (defined(i386) || defined(__i386) || defined(_M_IX86)) && !defined(__i386__) && !defined(__I86__)
 #define __i386__ 1
 #endif
+#if (defined(__amd64) || defined(__amd64__) || defined(__x86_64)) && !defined(__x86_64__)
+#define __x86_64__ 1
+#endif
 
 typedef enum memory_order
 {
@@ -67,32 +70,63 @@ typedef void* atomic_ptr;
 
 #endif
 
-#if defined(__i386__)
+#if defined(__i386__) || defined(__x86_64__)
 
-#if defined(__GNUC__) || defined(__clang__)
+#define __locked_load_impl(obj)  (((volatile atomic_int *)(obj))->_value)
+#define __locked_load_ptr_impl(obj)  (*(volatile atomic_ptr *)(obj))
+
+#endif
+
+#if (defined(__i386__) || defined(__x86_64__)) && (defined(__GNUC__) || defined(__clang__))
 
 #define __locked_exchange_impl(obj, value) \
     __extension__ ({ \
         __typeof__(value) __result; \
         __asm__ __volatile__( \
-            "xchg %0, %1" \
+            "xchgl %0, %1" \
             : "=r" (__result), "+m" (*(obj)) \
             : "0" (value) \
             : "memory"); \
         __result; \
     })
-#define __locked_exchange_ptr_impl __locked_exchange_impl
 
 #define __locked_store_impl(obj, value) \
     __extension__ ({ \
         __typeof__(value) __result; \
         __asm__ __volatile__( \
-            "xchg %0, %1" \
+            "xchgl %0, %1" \
             : "=r"(__result), "=m" (*(obj)) \
             : "0" (value) \
             : "memory"); \
     })
+
+#if defined(__x86_64__)
+
+#define __locked_store_ptr_impl(obj, value) \
+    __extension__ ({ \
+        __typeof__(value) __result; \
+        __asm__ __volatile__( \
+            "xchgq %0, %1" \
+            : "=r"(__result), "=m" (*(obj)) \
+            : "0" (value) \
+            : "memory"); \
+    })
+
+#define __locked_exchange_ptr_impl(obj, value) \
+    __extension__ ({ \
+        __typeof__(value) __result; \
+        __asm__ __volatile__( \
+            "xchgq %0, %1" \
+            : "=r" (__result), "+m" (*(obj)) \
+            : "0" (value) \
+            : "memory"); \
+        __result; \
+    })
+
+#else 
 #define __locked_store_ptr_impl __locked_store_impl
+#define __locked_exchange_ptr_impl __locked_exchange_impl
+#endif
 
 #define __locked_add_impl(obj, value) \
     __extension__ ({ \
@@ -149,7 +183,7 @@ typedef void* atomic_ptr;
         __result; \
     })
 
-#if _M_IX86 >= 400
+#if defined(__x86_64__) || (defined(_M_IX86) && _M_IX86 >= 400)
 
 #define __locked_compare_exchange_impl(obj, expected, desired) \
     __extension__ ({ \
@@ -165,7 +199,29 @@ typedef void* atomic_ptr;
         if (!__result) *__pold = __tmp; \
         __result; \
     })
+
+#if defined(__x86_64__)
+
+#define __locked_compare_exchange_ptr_impl(obj, expected, desired) \
+    __extension__ ({ \
+        __typeof__(*(expected)) __tmp; \
+        __typeof__(expected)   __pold = (expected); \
+        __typeof__(*(expected))  __old = *__pold; \
+        int __result; /* result in zero flag */ \
+        __asm__ __volatile__( \
+            "lock; cmpxchgq %3, %2" \
+            : "=a" (__tmp), "=@ccz" (__result), "+m" (*(obj)) \
+            : "r" (desired), "0" (__old) \
+            : "memory", "cc"); \
+        if (!__result) *__pold = __tmp; \
+        __result; \
+    })
+
+#else
+
 #define __locked_compare_exchange_ptr_impl __locked_compare_exchange_impl
+
+#endif
 
 #define __locked_fetch_add_impl(obj, value) \
     __extension__ ({ \
@@ -180,7 +236,9 @@ typedef void* atomic_ptr;
 
 #endif
 
-#elif defined(__WATCOMC__)
+#elif defined(__i386__)
+
+#if defined(__WATCOMC__)
 
 extern int __locked_exchange_impl(volatile atomic_int *obj, const int value);
 #pragma aux __locked_exchange_impl = \
@@ -260,7 +318,7 @@ extern signed char __locked_compare_exchange_impl(volatile atomic_int *obj, int 
     "mov eax, [ebx]" \
     "lock cmpxchg [edx], ecx" \
     "je succ" \
-    "mov [ebx], eax" \    
+    "mov [ebx], eax" \
     "succ: setz al" \
     __value [al]  \
     __parm [edx] [ebx] [ecx]
@@ -270,7 +328,7 @@ extern signed char __locked_compare_exchange_ptr_impl(volatile atomic_ptr *obj, 
     "mov eax, [ebx]" \
     "lock cmpxchg [edx], ecx" \
     "je succ" \
-    "mov [ebx], eax" \    
+    "mov [ebx], eax" \
     "succ: setz al" \
     __value [al]  \
     __parm [edx] [ebx] [ecx]
@@ -438,9 +496,6 @@ __locked_fetch_add_impl(volatile atomic_int *obj, const int value)
 #pragma warning( default : 4035 )
 
 #endif // _MSC_VER
-
-#define __locked_load_impl(obj)  (((volatile atomic_int *)(obj))->_value)
-#define __locked_load_ptr_impl(obj)  (*(volatile atomic_ptr *)(obj))
 
 #elif defined(__I86__)
 
@@ -828,7 +883,7 @@ __atomic_bit_test_and_clear(volatile atomic_int *obj, unsigned num);
 #define atomic_exchange_ptr __locked_exchange_ptr_impl
 #define atomic_exchange_explicit(obj,desired,order) __locked_exchange_impl((obj), (desired))
 
-#if defined(_M_IX86)
+#if defined(_M_IX86) || defined(__x86_64__)
 
 #define atomic_compare_exchange_strong __locked_compare_exchange_impl
 #define atomic_compare_exchange_weak __locked_compare_exchange_impl
