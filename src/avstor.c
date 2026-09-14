@@ -3524,10 +3524,17 @@ int AVCALL avstor_open(avstor **pdb, const char* filename, unsigned szcache, int
     TRY(ex)
     {
         if (oflags & AVSTOR_OPEN_CREATE) {
+#if defined(AVSTOR_CONFIG_THREAD_SAFE)
             if ((result = avstor_lock_acquire(db, AVSTOR_LOCK_EXCLUSIVE)) == AVSTOR_OK) {
+#endif
                 db_create_file(db, filename, oflags);
                 *pdb = db;
+#if defined(AVSTOR_CONFIG_THREAD_SAFE)
             }
+            else {
+                THROW(AVSTOR_INTERNAL, "Unable to obtain exclusive lock");
+            }
+#endif
         }
         else {
             db_open_file(db, filename, oflags);
