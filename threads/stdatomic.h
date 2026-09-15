@@ -34,6 +34,10 @@
 #ifndef STDATOMIC_H
 #define STDATOMIC_H
 
+#define _STDATOMIC_HAS_ATOMIC_INT_INC 1
+#define _STDATOMIC_HAS_ATOMIC_INT_DEC 1
+#define _STDATOMIC_HAS_ATOMIC_INT_ADD 1
+
 #if (defined(M_I86) || defined(_M_I86)) && !defined(__I86__)
 #define __I86__ 1
 #endif
