@@ -172,7 +172,7 @@ extern DWORD __key_tld;
 #define post_event(e)           SetEvent(*(e))
 #define reset_event(e)          ResetEvent(*(e))
 
-static int __inline wait_event(OS_EVENT *event, long timo)
+static __inline int wait_event(OS_EVENT *event, long timo)
 {
     DWORD res;
     while ((res = WaitForSingleObjectEx(*event, (DWORD)timo, TRUE)) == WAIT_IO_COMPLETION)
