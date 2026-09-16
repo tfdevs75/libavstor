@@ -57,13 +57,26 @@ enum {
     mtx_timed = 1 << 1
 };
 
+typedef void (*tss_dtor_t)(void*);
+
+#if defined(STDTHREAD_CONFIG_USE_PTHREAD)
+
+#include <pthread.h>
+
+typedef pthread_t       thrd_t;
+typedef pthread_once_t  once_flag;
+typedef pthread_key_t   tss_t;
+typedef pthread_mutex_t mtx_t;
+typedef pthread_cond_t  cnd_t;
+
+#define ONCE_FLAG_INIT  PTHREAD_ONCE_INIT
+
+#else 
+
 #define ONCE_FLAG_INIT { 0 }
-
-typedef atomic_int once_flag;
-
 #define _MAX_TLS_KEY 255
 
-typedef void (*tss_dtor_t)(void*);
+typedef atomic_int once_flag;
 
 typedef struct {
     unsigned int _key;
@@ -122,6 +135,8 @@ extern void* __ThreadStackAddr;
 
 #endif
 
+#endif
+
 typedef int (__cdecl *thrd_start_t)(void*);
 
 int __cdecl _thrd_create_ex(thrd_t *thr, thrd_start_t func, void *arg, void *stack_bottom, size_t stack_size);
@@ -131,10 +146,13 @@ thrd_t __cdecl thrd_current(void);
 int __cdecl thrd_detach(thrd_t thr);
 int __cdecl thrd_equal(thrd_t lhs, thrd_t rhs);
 
-#if !defined(_MSC_VER) || _MSC_VER >= 1200
+#if (defined(__clang__) || defined(__GNUC__))
+__attribute__((noreturn))
+#elif !defined(_MSC_VER) || _MSC_VER >= 1200
 __declspec(noreturn)
 #endif
 void __cdecl thrd_exit(int res);
+
 int __cdecl thrd_join(thrd_t thr, int* res);
 int __cdecl thrd_sleep(const struct timespec* duration, struct timespec* remaining);
 void __cdecl thrd_yield(void);
@@ -157,11 +175,6 @@ int __cdecl tss_set(tss_t tss_id, void *val);
 void* __cdecl tss_get(tss_t tss_key);
 
 void __cdecl call_once(once_flag* flag, void(*_Func)(void));
-
-int __cdecl _usem_init(struct _usem *sem, short initial_count, short max_count);
-void __cdecl _usem_destroy(struct _usem *sem);
-int __cdecl _usem_acquire(struct _usem *sem);
-int __cdecl _usem_release(struct _usem *sem);
 
 #ifdef __cplusplus
 }

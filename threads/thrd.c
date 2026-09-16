@@ -33,6 +33,123 @@
 
 #include <malloc.h>
 
+#if defined(STDTHREAD_CONFIG_USE_PTHREAD)
+
+#include "_threads.h"
+
+#include <errno.h>
+#include <sched.h>
+#include <stdint.h>
+
+struct _thrd_param {
+    void            *arg;
+    thrd_start_t    func;
+};
+
+static void *thrdproc(void *param)
+{
+    struct _thrd_param p = *(struct _thrd_param *)param;
+    void *arg = p.arg;
+    thrd_start_t func = p.func;
+
+    free(param);
+    return (void*)(intptr_t)func(arg);
+}
+
+int __cdecl thrd_create(thrd_t *thr, thrd_start_t func, void *arg)
+{
+    struct _thrd_param *param = malloc(sizeof(*param));
+    if (param == NULL) {
+        return thrd_nomem;
+    }
+    param->arg = arg;
+    param->func = func;
+
+    switch (pthread_create(thr, NULL, thrdproc, param)) {
+    case 0:         return thrd_success;
+    case EAGAIN:    return thrd_nomem;
+    default:        return thrd_error;
+    }
+}
+
+thrd_t __cdecl thrd_current(void)
+{
+    return pthread_self();
+}
+
+int __cdecl thrd_detach(thrd_t thr)
+{
+    switch (pthread_detach(thr)) {
+    case 0:         return thrd_success;
+    default:        return thrd_error;
+    }
+}
+
+int __cdecl thrd_equal(thrd_t lhs, thrd_t rhs)
+{
+    return pthread_equal(lhs, rhs);
+}
+
+void __cdecl thrd_exit(int res)
+{
+    pthread_exit((void *)(intptr_t)res);
+    for (;;)
+        ;
+}
+
+int __cdecl thrd_join(thrd_t thr, int *res)
+{
+    void *p_res;
+    switch (pthread_join(thr, &p_res)) {
+    case 0:         { *res = (int)(intptr_t)p_res; return thrd_success; }
+    default:        return thrd_error;
+    }
+
+}
+
+void __cdecl thrd_yield(void)
+{
+    sched_yield();
+}
+
+int __cdecl tss_create(tss_t *tss_key, tss_dtor_t destructor)
+{
+    switch (pthread_key_create(tss_key, destructor)) {
+    case 0:         return thrd_success;
+    case EAGAIN:
+    case ENOMEM:    return thrd_nomem;
+    default:        return thrd_error;
+    }
+}
+
+int __cdecl tss_delete(tss_t tss_id)
+{
+    switch (pthread_key_delete(tss_id)) {
+    case 0:         return thrd_success;
+    default:        return thrd_error;
+    }
+}
+
+int __cdecl tss_set(tss_t tss_id, void *val)
+{
+    switch (pthread_setspecific(tss_id, val)) {
+    case 0:         return thrd_success;
+    default:        return thrd_error;
+    }
+}
+
+void *__cdecl tss_get(tss_t tss_key)
+{
+    return pthread_getspecific(tss_key);
+}
+
+void __cdecl call_once(once_flag *flag, void(*_Func)(void))
+{
+    pthread_once(flag, _Func);
+}
+
+#else
+
 #if defined(__OS2__)
 #undef _WIN32
 
@@ -53,6 +170,11 @@ typedef unsigned long long ULONGLONG;
 
 #define WIN32_LEAN_AND_MEAN 1
 #include <Windows.h>
+
+// Old versions of VC don't define ULONGLONG either
+#if defined(_MSC_VER) && _MSC_VER <= 0x1200
+typedef unsigned __int64 ULONGLONG;
+#endif
 
 #endif
 
@@ -388,10 +510,10 @@ static void timespec_now(struct timespec *ts)
     ull.HighPart = ft.dwHighDateTime;
 
     /* Convert to Unix epoch (1970-01-01) */
-    ull.QuadPart -= 11644473600ULL * 10000000ULL;  /* 11644473600 seconds * 10^7 */
+    ull.QuadPart -= (ULONGLONG)11644473600UL * 10000000UL;  /* 11644473600 seconds * 10^7 */
 
-    ts->tv_sec  = (time_t)(ull.QuadPart / 10000000ULL);
-    ts->tv_nsec = (long)((ull.QuadPart % 10000000ULL) * 100);  /* 100ns -> ns */
+    ts->tv_sec  = (time_t)(ull.QuadPart / 10000000UL);
+    ts->tv_nsec = (long)((ull.QuadPart % 10000000UL) * 100);  /* 100ns -> ns */
 }
 
 static int os_sleep(const struct timespec *ts)
@@ -1015,3 +1137,4 @@ void __cdecl call_once(once_flag *_flag, void(*_func)(void))
         }
     }
 }
+#endif

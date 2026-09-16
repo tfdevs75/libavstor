@@ -30,16 +30,20 @@
 * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include "threads.h"
-
 // These are private declarations used by the modules that don't
 // need to be in threads.h
 
-#if defined(_MSC_VER) && _MSC_VER < 1200
-#define NORETURN
-#else
+#if (defined(__clang__) || defined(__GNUC__))
+#define NORETURN __attribute__((noreturn))
+#elif !defined(_MSC_VER) || _MSC_VER >= 1200
 #define NORETURN __declspec(noreturn)
+#else
+#define NORETURN
 #endif
+
+#include "threads.h"
+
+#if !defined(STDTHREAD_CONFIG_USE_PTHREAD)
 
 #if defined(__OS2__)
 
@@ -53,7 +57,7 @@
 
 #endif
 #elif defined(_WIN32)
-
+#define WIN32_LEAN_AND_MEAN 1
 #include <Windows.h>
 #endif
 
@@ -176,4 +180,5 @@ static int __inline wait_event(OS_EVENT *event, long timo)
     return res == WAIT_OBJECT_0;
 }
 
+#endif
 #endif

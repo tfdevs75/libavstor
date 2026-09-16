@@ -7,6 +7,9 @@ TEST_OBJ_DIR = $(OBJ_DIR)/$(TEST_SRC_DIR)
 
 OS_NAME = $(shell uname -o)
 
+EXE_EXT =
+LIB_EXT = .a
+		
 ifeq ($(OS_NAME), Cygwin)
 	EXE_EXT = .exe
 	LIB_EXT = .lib
@@ -14,15 +17,18 @@ ifeq ($(OS_NAME), Cygwin)
 	ifeq ($(WIN32), 1)
 		CFLAGS += -mwin32
 	endif
-else
+endif
+
 # For mingw
-	ifeq ($(OS_NAME), MS/Windows)
-		EXE_EXT = .exe
-		LIB_EXT = .lib
-	else
-		EXE_EXT =
-		LIB_EXT = .a
-	endif
+ifeq ($(OS_NAME), MS/Windows)
+	EXE_EXT = .exe
+	LIB_EXT = .a
+endif
+
+#MSYS
+ifeq ($(OS_NAME), Msys)
+	EXE_EXT = .exe
+	LIB_EXT = .a
 endif
 
 LIB_NAME = avstor
@@ -42,12 +48,16 @@ HAS_NO_STDTHREADS = $(shell $(CC) -lstdthreads /dev/null 2>/dev/stdout | grep -c
 
 ifeq ($(THREAD_SAFE), 1)
 	CFLAGS += -DAVSTOR_CONFIG_THREAD_SAFE=1
-	ifeq ($(HAS_NO_STDTHREADS), 0)
+	ifeq ($(CUSTOM_STDTHREADS), 1)
+		CFLAGS += -I./threads
+		LDFLAGS += -L./threads/bin
+	endif	
+	ifeq ($(USE_PTHREAD), 1)
+		CFLAGS += -DSTDTHREAD_CONFIG_USE_PTHREAD=1
+		LDFLAGS += -lpthread
+	endif
+	ifeq ($(LINK_STDTHREADS), 1)
 		LDFLAGS += -lstdthreads
-	else
-		ifeq ($(OS_NAME), Cygwin)
-			LDFLAGS += -lpthread
-		endif
 	endif
 endif
 

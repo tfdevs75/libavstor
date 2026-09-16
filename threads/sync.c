@@ -31,6 +31,106 @@
 * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#if defined(STDTHREAD_CONFIG_USE_PTHREAD)
+
+#include "_threads.h"
+
+int __cdecl mtx_init(mtx_t *mtx, int type)
+{
+    pthread_mutexattr_t attr;
+    int result;
+    int mtx_type = type & mtx_recursive ? PTHREAD_MUTEX_RECURSIVE : PTHREAD_MUTEX_NORMAL;
+
+    if (pthread_mutexattr_init(&attr)) {
+        return thrd_error;
+    }
+    if (pthread_mutexattr_settype(&attr, mtx_type)) {
+        return thrd_error;
+    }
+
+    result = pthread_mutex_init(mtx, &attr);
+
+    pthread_mutexattr_destroy(&attr);
+
+    switch (result) {
+    case 0:         return thrd_success;
+    case ENOMEM:
+    case EAGAIN:    return thrd_nomem;
+    default:        return thrd_error;
+    }
+}
+
+void __cdecl mtx_destroy(mtx_t *mtx)
+{
+    (void)pthread_mutex_destroy(mtx);
+}
+
+int __cdecl mtx_trylock(mtx_t *mtx)
+{
+    switch (pthread_mutex_trylock(mtx)) {
+    case 0:         return thrd_success;
+    case EBUSY:     return thrd_busy;
+    default:        return thrd_error;
+    }
+}
+
+int __cdecl mtx_lock(mtx_t *mtx)
+{
+    switch (pthread_mutex_lock(mtx)) {
+    case 0:         return thrd_success;
+    default:        return thrd_error;
+    }
+}
+
+int __cdecl mtx_unlock(mtx_t *mtx)
+{
+    switch (pthread_mutex_unlock(mtx)) {
+    case 0:         return thrd_success;
+    default:        return thrd_error;
+    }
+}
+
+int __cdecl cnd_init(cnd_t* cond)
+{
+    switch (pthread_cond_init(cond, NULL)) {
+    case 0:         return thrd_success;
+    case ENOMEM:
+    case EAGAIN:    return thrd_nomem;
+    default:        return thrd_error;
+    }
+}
+
+void __cdecl cnd_destroy(cnd_t *cond)
+{
+    (void)pthread_cond_destroy(cond);
+}
+
+int __cdecl cnd_signal(cnd_t *cond)
+{
+    switch (pthread_cond_signal(cond)) {
+    case 0:         return thrd_success;
+    default:        return thrd_error;
+    }
+}
+
+int __cdecl cnd_broadcast(cnd_t *cond)
+{
+    switch (pthread_cond_broadcast(cond)) {
+    case 0:         return thrd_success;
+    default:        return thrd_error;
+    }
+}
+
+int __cdecl cnd_wait(cnd_t *cond, mtx_t *mtx)
+{
+    switch (pthread_cond_wait(cond, mtx)) {
+    case 0:         return thrd_success;
+    default:        return thrd_error;
+    }
+}
+
+#else
+
 #if defined(__OS2__)
 #undef _WIN32
 
@@ -128,7 +228,7 @@ static void mcs_lock_release(struct _mcs_lock *ml, struct _mcs_node *ctx)
 // User space counting semaphore. These will be significantly faster for
 // the uncontended case, since we don't need to call into the kernel
 //
-int __cdecl _usem_init(struct _usem *sem, short initial_count, short max_count)
+static int __cdecl _usem_init(struct _usem *sem, short initial_count, short max_count)
 {
     memset(sem, 0, sizeof(*sem));
     sem->_max_count = max_count;
@@ -152,7 +252,7 @@ int __cdecl _usem_init(struct _usem *sem, short initial_count, short max_count)
     return 1;
 }
 
-void __cdecl _usem_destroy(struct _usem *sem)
+static void __cdecl _usem_destroy(struct _usem *sem)
 {
 #if defined(_WIN32)
     CloseHandle(sem->_event);
@@ -166,7 +266,7 @@ void __cdecl _usem_destroy(struct _usem *sem)
 // Acquire semaphore. If we had to wait and the wait was not satisfied, 
 // return 0 else return 1
 //
-int __cdecl _usem_acquire(struct _usem *sem)
+static int __cdecl _usem_acquire(struct _usem *sem)
 {
     int result = 1;
     struct _mcs_node *mnode = &THREAD_DATA->sem_lock;
@@ -190,7 +290,7 @@ int __cdecl _usem_acquire(struct _usem *sem)
     return result;
 }
 
-int __cdecl _usem_release(struct _usem *sem)
+static int __cdecl _usem_release(struct _usem *sem)
 {
     struct _mcs_node *mnode = &THREAD_DATA->sem_lock;
 
@@ -423,3 +523,4 @@ int __cdecl mtx_unlock(mtx_t* mtx)
 #endif
     return thrd_error;
 }
+#endif
