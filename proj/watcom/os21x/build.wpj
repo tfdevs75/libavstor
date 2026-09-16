@@ -4,10 +4,10 @@ projectIdent
 VpeMain
 1
 WRect
-1424
-768
+288
+540
 6688
-6513
+6504
 2
 MProject
 3
@@ -45,7 +45,7 @@ VComponent
 12
 WRect
 2560
-113
+104
 1104
 3072
 0
@@ -61,9 +61,9 @@ VComponent
 15
 WRect
 4896
-161
+151
 1120
-2379
+2370
 0
 0
 16
@@ -77,9 +77,9 @@ VComponent
 18
 WRect
 3744
-180
+170
 1056
-2863
+2853
 0
 0
 19
@@ -93,9 +93,9 @@ VComponent
 21
 WRect
 144
-47
+37
 1152
-2626
+2616
 0
 0
 22
@@ -109,9 +109,9 @@ VComponent
 24
 WRect
 1376
-151
+142
 1120
-2313
+2304
 0
 0
 25
@@ -120,4 +120,4 @@ WFileName
 stdthrd\testthrd.tgt
 0
 1
-17
+11
