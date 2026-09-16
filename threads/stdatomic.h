@@ -639,7 +639,8 @@ extern signed char __locked_compare_exchange_ptr_impl(volatile atomic_ptr *obj, 
 
 /* There appears to be a bug in the VC++ MIPS compiler that produces bad
  * code when optimizations are turned on and the inline ASM functions don't 
- * explicitly return a value. 
+ * explicitly return a value. Inline functions with void return also seem
+ * to have problems.
  */
 
 static __inline int __cdecl __locked_exchange_impl(volatile atomic_int *obj, const int value)
