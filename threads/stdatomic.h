@@ -637,165 +637,186 @@ extern signed char __locked_compare_exchange_ptr_impl(volatile atomic_ptr *obj, 
 
 #elif defined(_MSC_VER) && defined(_M_MRX000) && _M_MRX000 >= 4000
 
-#pragma warning( disable : 4035 )
+/* There appears to be a bug in the VC++ MIPS compiler that produces bad
+ * code when optimizations are turned on and the inline ASM functions don't 
+ * explicitly return a value. 
+ */
 
 static __inline int __cdecl __locked_exchange_impl(volatile atomic_int *obj, const int value)
 {
+	int result;
 	__asm(
 		"1: move %t1, %1;"
-		"ll %v0, 0(%0);"
+		"ll %t0, 0(%0);"
 		"sc %t1, 0(%0);"
-		"beq %t1, 0, 1b", obj, value);
+		"sw %t0, 0(%2);"
+		"beq %t1, 0, 1b"
+		, obj, value, &result);
+	return result;
 }
 
 static __inline void* __cdecl __locked_exchange_ptr_impl(volatile atomic_ptr *obj, const void *value)
-{
+{	
+	void *result;
 	__asm(
 		"1: move %t1, %1;"
-		"ll %v0, 0(%0);"
+		"ll %t0, 0(%0);"
 		"sc %t1, 0(%0);"
-		"beq %t1, 0, 1b", obj, value);
+		"sw %t0, 0(%2);"
+		"beq %t1, 0, 1b"
+		, obj, value, &result);
+	return result;
 }
-
 
 static __inline int __cdecl __locked_load_impl(volatile atomic_int *obj)
 {
-	__asm(
-		"sync;"
-		"lw %v0, 0(%0);"
-		"sync"
-		, obj);
+	__asm("sync");
+	return obj->_value;
 }
 
 static __inline void* __cdecl __locked_load_ptr_impl(volatile atomic_ptr *obj)
 {
-	__asm(
-		"sync;"
-		"lw %v0, 0(%0);"
-		"sync"
-		, obj);
+	__asm("sync");
+	return *obj;
 }
 
-static __inline void __cdecl __locked_store_impl(volatile atomic_int *obj, const int value)
-{
-	__asm(
-		"sync;"
-		"sw %1, 0(%0);"
-		"sync"
-		, obj, value);
-}
+#define __locked_store_impl(obj, value) \
+	__asm( \
+		"sw %1, 0(%0);" \
+		"sync" \
+		, obj, value)
 
-static __inline void __cdecl __locked_store_ptr_impl(volatile atomic_ptr *obj, const void *value)
-{
-	__asm(
-		"sync;"
-		"sw %1, 0(%0);"
-		"sync"
-		, obj, value);
-}
+#define __locked_store_ptr_impl(obj, value) \
+	__asm( \
+		"sw %1, 0(%0);" \
+		"sync" \
+		, obj, value)
 
 static __inline int __cdecl __locked_add_impl(volatile atomic_int *obj, const int value)
 {
+	int result;
 	__asm(
 		"1: ll %t0, 0(%0);"
 		"addu %t1, %t0, %1;"
-		"move %v0, %t1;"
+		"sw %t1, 0(%2);"
 		"sc %t1, 0(%0);"
-		"beq %t1, 0, 1b", obj, value);
+		"beq %t1, 0, 1b"
+		, obj, value, &result);
+	return result;
 }
 
 static __inline int __cdecl __locked_fetch_add_impl(volatile atomic_int *obj, const int value)
 {
+	int result;
 	__asm(
-		"1: ll %v0, 0(%0);"
-		"addu %t1, %v0, %1;"
+		"1: ll %t0, 0(%0);"
+		"addu %t1, %t0, %1;"
 		"sc %t1, 0(%0);"
-		"beq %t1, 0, 1b", obj, value);
+		"sw %t0, 0(%2);"
+		"beq %t1, 0, 1b"
+		, obj, value, &result);
+	return result;
 }
 
 static __inline int __cdecl __locked_inc_impl(volatile atomic_int *obj)
 {
+	int result;
 	__asm(
 		"1: ll %t0, 0(%0);"
 		"addiu %t1, %t0, 1;"
-		"move %v0, %t1;"
+		"sw %t1, 0(%1);"
 		"sc %t1, 0(%0);"
-		"beq %t1, 0, 1b", obj);
+		"beq %t1, 0, 1b"
+		, obj, &result);
+	return result;
 }
 
 static __inline int __cdecl __locked_dec_impl(volatile atomic_int *obj)
 {
+	int result;
 	__asm(
 		"1: ll %t0, 0(%0);"
 		"addiu %t1, %t0, -1;"
-		"move %v0, %t1;"
+		"sw %t1, 0(%1);"
 		"sc %t1, 0(%0);"
-		"beq %t1, 0, 1b", obj);
+		"beq %t1, 0, 1b"
+		, obj, &result);
+	return result;
 }
 
 static __inline int __cdecl __locked_compare_exchange_strong_impl(volatile atomic_int *obj, int *expected, const int desired)
 {
+	int result;
 	__asm(
 		"lw %t2, 0(%1);"			//load expected
-		"move %v0, %zero;"			//assume fail
+		"move %t3, %zero;"			//assume fail
 		"1: move %t1, %2;"
 		"ll %t0, 0(%0);"
 		"bne %t0, %t2, 2f;"
 		"sc %t1, 0(%0);"
 		"beq %t1, 0, 1b;"			//can't fail spuriously
-		"li %v0, 1;"
+		"li %t3, 1;"
 		"j 3f;"
 		"2: sw %t0, 0(%1);"
-		"3: ", obj, expected, desired);
+		"3: sw %t3, 0(%3)"
+		, obj, expected, desired, &result);
+	return result;
 }
 
-static __inline void* __cdecl __locked_compare_exchange_ptr_strong_impl(volatile atomic_ptr *obj, void **expected, const void *desired)
+static __inline void* __cdecl __locked_compare_exchange_ptr_strong_impl(volatile atomic_ptr *obj, void **expected, void *desired)
 {
+	void *result;
 	__asm(
 		"lw %t2, 0(%1);"			//load expected
-		"move %v0, %zero;"			//assume fail
+		"move %t3, %zero;"			//assume fail
 		"1: move %t1, %2;"
 		"ll %t0, 0(%0);"
 		"bne %t0, %t2, 2f;"
 		"sc %t1, 0(%0);"
 		"beq %t1, 0, 1b;"			//can't fail spuriously
-		"li %v0, 1;"
+		"li %t3, 1;"
 		"j 3f;"
 		"2: sw %t0, 0(%1);"
-		"3: ", obj, expected, desired);
+		"3: sw %t3, 0(%3)"
+		, obj, expected, desired, &result);
+	return result;
 }
 
 static __inline int __cdecl __locked_compare_exchange_weak_impl(volatile atomic_int *obj, int *expected, const int desired)
 {
+	int result;
 	__asm(
 		"lw %t2, 0(%1);"			//load expected
-		"move %v0, %zero;"			//assume fail
+		"move %t3, %zero;"			//assume fail
 		"ll %t0, 0(%0);"
 		"bne %t0, %t2, 1f;"
 		"sc %2, 0(%0);"
 		"beq %2, 0, 1f;"			//can fail spuriously
-		"li %v0, 1;"
+		"li %t3, 1;"
 		"j 2f;"
 		"1: sw %t0, 0(%1);"
-		"2: ", obj, expected, desired);
+		"2: sw %t3, 0(%3)"
+		, obj, expected, desired, &result);
+	return result;
 }
 
-static __inline void* __cdecl __locked_compare_exchange_ptr_weak_impl(volatile atomic_ptr *obj, void **expected, const void *desired)
+static __inline void* __cdecl __locked_compare_exchange_ptr_weak_impl(volatile atomic_ptr *obj, void **expected, void *desired)
 {
+	void *result;
 	__asm(
 		"lw %t2, 0(%1);"			//load expected
-		"move %v0, %zero;"			//assume fail
+		"move %t3, %zero;"			//assume fail
 		"ll %t0, 0(%0);"
 		"bne %t0, %t2, 1f;"
 		"sc %2, 0(%0);"
 		"beq %2, 0, 1f;"			//can fail spuriously
-		"li %v0, 1;"
+		"li %t3, 1;"
 		"j 2f;"
 		"1: sw %t0, 0(%1);"
-		"2: ", obj, expected, desired);
-
+		"2: sw %t3, 0(%3)"
+		, obj, expected, desired, &result);
+	return result;
 }
-#pragma warning( default : 4035 )
 
 #endif // _M_MRX000
 
