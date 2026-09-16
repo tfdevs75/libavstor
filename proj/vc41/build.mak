@@ -60,7 +60,7 @@ NULL=nul
 !ENDIF 
 ################################################################################
 # Begin Project
-# PROP Target_Last_Scanned "avstor - Win32 Debug"
+# PROP Target_Last_Scanned "testthrd - Win32 MIPSRel"
 
 !IF  "$(CFG)" == "avstest - Win32 Release"
 
@@ -77,15 +77,8 @@ NULL=nul
 OUTDIR=.\bin\Release
 INTDIR=.\avstest\Release
 
-ALL : "avstor - Win32 Release" "stdthrd - Win32 Release"\
- "$(OUTDIR)\avstest.exe"
-
-CLEAN : 
-	-@erase "$(INTDIR)\avsdb.obj"
-	-@erase "$(INTDIR)\avstest.obj"
-	-@erase "$(INTDIR)\timer.obj"
-	-@erase "$(INTDIR)\tst_dfs.obj"
-	-@erase "$(OUTDIR)\avstest.exe"
+ALL :     "avstor - Win32 Release" "stdthrd - Win32 Release"\
+     "$(OUTDIR)\avstest.exe"
 
 "$(OUTDIR)" :
     if not exist "$(OUTDIR)/$(NULL)" mkdir "$(OUTDIR)"
@@ -95,9 +88,10 @@ CLEAN :
 
 CPP=cl.exe
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_CONSOLE" /YX /c
-# ADD CPP /nologo /G4 /MT /W3 /GX /O2 /I "..\..\include" /D "NDEBUG" /D "_CONSOLE" /D "WIN32" /YX /c
-CPP_PROJ=/nologo /G4 /MT /W3 /GX /O2 /I "..\..\include" /D "NDEBUG" /D\
- "_CONSOLE" /D "WIN32" /Fp"$(INTDIR)/build.pch" /YX /Fo"$(INTDIR)/" /c 
+# ADD CPP /nologo /G5 /MT /W3 /GX /O2 /I "..\..\include" /I "..\..\threads" /D "NDEBUG" /D "_CONSOLE" /D "WIN32" /D AVSTOR_CONFIG_THREAD_SAFE=1 /YX /c
+CPP_PROJ=/nologo /G5 /MT /W3 /GX /O2 /I "..\..\include" /I "..\..\threads" /D\
+ "NDEBUG" /D "_CONSOLE" /D "WIN32" /D AVSTOR_CONFIG_THREAD_SAFE=1\
+ /Fp"$(INTDIR)/build.pch" /YX /Fo"$(INTDIR)/" /c 
 CPP_OBJS=.\avstest\Release/
 CPP_SBRS=.\.
 
@@ -119,9 +113,6 @@ CPP_SBRS=.\.
 .cxx{$(CPP_SBRS)}.sbr:
    $(CPP) $(CPP_PROJ) $<  
 
-RSC=rc.exe
-# ADD BASE RSC /l 0x409
-# ADD RSC /l 0x409
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
@@ -164,18 +155,8 @@ LINK32_OBJS= \
 OUTDIR=.\bin\Debug
 INTDIR=.\avstest\Debug
 
-ALL : "avstor - Win32 Debug" "stdthrd - Win32 Debug" "$(OUTDIR)\avstest.exe"
-
-CLEAN : 
-	-@erase "$(INTDIR)\avsdb.obj"
-	-@erase "$(INTDIR)\avstest.obj"
-	-@erase "$(INTDIR)\timer.obj"
-	-@erase "$(INTDIR)\tst_dfs.obj"
-	-@erase "$(INTDIR)\vc40.idb"
-	-@erase "$(INTDIR)\vc40.pdb"
-	-@erase "$(OUTDIR)\avstest.exe"
-	-@erase "$(OUTDIR)\avstest.ilk"
-	-@erase "$(OUTDIR)\avstest.pdb"
+ALL :     "avstor - Win32 Debug" "stdthrd - Win32 Debug"\
+ "$(OUTDIR)\avstest.exe"
 
 "$(OUTDIR)" :
     if not exist "$(OUTDIR)/$(NULL)" mkdir "$(OUTDIR)"
@@ -185,9 +166,10 @@ CLEAN :
 
 CPP=cl.exe
 # ADD BASE CPP /nologo /W3 /Gm /GX /Zi /Od /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /YX /c
-# ADD CPP /nologo /G4 /MTd /W3 /Gm /GX /Zi /Od /I "..\..\include" /D "_DEBUG" /D "_CONSOLE" /D "WIN32" /YX /c
-CPP_PROJ=/nologo /G4 /MTd /W3 /Gm /GX /Zi /Od /I "..\..\include" /D "_DEBUG" /D\
- "_CONSOLE" /D "WIN32" /Fp"$(INTDIR)/build.pch" /YX /Fo"$(INTDIR)/"\
+# ADD CPP /nologo /G5 /MTd /W3 /Gm /GX /Zi /Od /I "..\..\include" /I "..\..\threads" /D "_DEBUG" /D "_CONSOLE" /D "WIN32" /D AVSTOR_CONFIG_THREAD_SAFE=1 /YX /c
+CPP_PROJ=/nologo /G5 /MTd /W3 /Gm /GX /Zi /Od /I "..\..\include" /I\
+ "..\..\threads" /D "_DEBUG" /D "_CONSOLE" /D "WIN32" /D\
+ AVSTOR_CONFIG_THREAD_SAFE=1 /Fp"$(INTDIR)/build.pch" /YX /Fo"$(INTDIR)/"\
  /Fd"$(INTDIR)/" /c 
 CPP_OBJS=.\avstest\Debug/
 CPP_SBRS=.\.
@@ -210,9 +192,6 @@ CPP_SBRS=.\.
 .cxx{$(CPP_SBRS)}.sbr:
    $(CPP) $(CPP_PROJ) $<  
 
-RSC=rc.exe
-# ADD BASE RSC /l 0x409
-# ADD RSC /l 0x409
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
@@ -254,13 +233,7 @@ LINK32_OBJS= \
 OUTDIR=.\bin\Release
 INTDIR=.\stdthrd\Release
 
-ALL : "$(OUTDIR)\stdthrd.lib"
-
-CLEAN : 
-	-@erase "$(INTDIR)\atomics.obj"
-	-@erase "$(INTDIR)\sync.obj"
-	-@erase "$(INTDIR)\thrd.obj"
-	-@erase "$(OUTDIR)\stdthrd.lib"
+ALL :     "$(OUTDIR)\stdthrd.lib"
 
 "$(OUTDIR)" :
     if not exist "$(OUTDIR)/$(NULL)" mkdir "$(OUTDIR)"
@@ -270,9 +243,10 @@ CLEAN :
 
 CPP=cl.exe
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /YX /c
-# ADD CPP /nologo /G4 /MT /W3 /GX /O2 /I "..\..\include" /D "NDEBUG" /D "_WINDOWS" /D "WIN32" /YX /c
-CPP_PROJ=/nologo /G4 /MT /W3 /GX /O2 /I "..\..\include" /D "NDEBUG" /D\
- "_WINDOWS" /D "WIN32" /Fp"$(INTDIR)/stdthrd.pch" /YX /Fo"$(INTDIR)/" /c 
+# ADD CPP /nologo /G5 /MT /W3 /GX /O2 /I "..\..\include" /I "..\..\threads" /D "NDEBUG" /D "_WINDOWS" /D "WIN32" /D AVSTOR_CONFIG_THREAD_SAFE=1 /YX /c
+CPP_PROJ=/nologo /G5 /MT /W3 /GX /O2 /I "..\..\include" /I "..\..\threads" /D\
+ "NDEBUG" /D "_WINDOWS" /D "WIN32" /D AVSTOR_CONFIG_THREAD_SAFE=1\
+ /Fp"$(INTDIR)/stdthrd.pch" /YX /Fo"$(INTDIR)/" /c 
 CPP_OBJS=.\stdthrd\Release/
 CPP_SBRS=.\.
 
@@ -329,13 +303,7 @@ LIB32_OBJS= \
 OUTDIR=.\bin\Debug
 INTDIR=.\stdthrd\Debug
 
-ALL : "$(OUTDIR)\stdthrd.lib"
-
-CLEAN : 
-	-@erase "$(INTDIR)\atomics.obj"
-	-@erase "$(INTDIR)\sync.obj"
-	-@erase "$(INTDIR)\thrd.obj"
-	-@erase "$(OUTDIR)\stdthrd.lib"
+ALL :     "$(OUTDIR)\stdthrd.lib"
 
 "$(OUTDIR)" :
     if not exist "$(OUTDIR)/$(NULL)" mkdir "$(OUTDIR)"
@@ -345,9 +313,10 @@ CLEAN :
 
 CPP=cl.exe
 # ADD BASE CPP /nologo /W3 /GX /Z7 /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /YX /c
-# ADD CPP /nologo /G4 /MTd /W3 /GX /Z7 /Od /I "..\..\include" /D "_DEBUG" /D "_WINDOWS" /D "WIN32" /YX /c
-CPP_PROJ=/nologo /G4 /MTd /W3 /GX /Z7 /Od /I "..\..\include" /D "_DEBUG" /D\
- "_WINDOWS" /D "WIN32" /Fp"$(INTDIR)/stdthrd.pch" /YX /Fo"$(INTDIR)/" /c 
+# ADD CPP /nologo /G5 /MTd /W3 /GX /Z7 /Od /I "..\..\include" /I "..\..\threads" /D "_DEBUG" /D "_WINDOWS" /D "WIN32" /D AVSTOR_CONFIG_THREAD_SAFE=1 /YX /c
+CPP_PROJ=/nologo /G5 /MTd /W3 /GX /Z7 /Od /I "..\..\include" /I "..\..\threads"\
+ /D "_DEBUG" /D "_WINDOWS" /D "WIN32" /D AVSTOR_CONFIG_THREAD_SAFE=1\
+ /Fp"$(INTDIR)/stdthrd.pch" /YX /Fo"$(INTDIR)/" /c 
 CPP_OBJS=.\stdthrd\Debug/
 CPP_SBRS=.\.
 
@@ -404,11 +373,7 @@ LIB32_OBJS= \
 OUTDIR=.\bin\Release
 INTDIR=.\testthrd\Release
 
-ALL : "stdthrd - Win32 Release" "$(OUTDIR)\testthrd.exe"
-
-CLEAN : 
-	-@erase "$(INTDIR)\test.obj"
-	-@erase "$(OUTDIR)\testthrd.exe"
+ALL :     "stdthrd - Win32 Release" "$(OUTDIR)\testthrd.exe"
 
 "$(OUTDIR)" :
     if not exist "$(OUTDIR)/$(NULL)" mkdir "$(OUTDIR)"
@@ -418,9 +383,9 @@ CLEAN :
 
 CPP=cl.exe
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_CONSOLE" /YX /c
-# ADD CPP /nologo /G4 /MT /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_CONSOLE" /YX /c
-CPP_PROJ=/nologo /G4 /MT /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_CONSOLE"\
- /Fp"$(INTDIR)/testthrd.pch" /YX /Fo"$(INTDIR)/" /c 
+# ADD CPP /nologo /G5 /MT /W3 /GX /O2 /D "NDEBUG" /D "_CONSOLE" /D "WIN32" /D AVSTOR_CONFIG_THREAD_SAFE=1 /YX /c
+CPP_PROJ=/nologo /G5 /MT /W3 /GX /O2 /D "NDEBUG" /D "_CONSOLE" /D "WIN32" /D\
+ AVSTOR_CONFIG_THREAD_SAFE=1 /Fp"$(INTDIR)/testthrd.pch" /YX /Fo"$(INTDIR)/" /c 
 CPP_OBJS=.\testthrd\Release/
 CPP_SBRS=.\.
 
@@ -442,9 +407,6 @@ CPP_SBRS=.\.
 .cxx{$(CPP_SBRS)}.sbr:
    $(CPP) $(CPP_PROJ) $<  
 
-RSC=rc.exe
-# ADD BASE RSC /l 0x409
-# ADD RSC /l 0x409
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
@@ -482,15 +444,7 @@ LINK32_OBJS= \
 OUTDIR=.\bin\Debug
 INTDIR=.\testthrd\Debug
 
-ALL : "stdthrd - Win32 Debug" "$(OUTDIR)\testthrd.exe"
-
-CLEAN : 
-	-@erase "$(INTDIR)\test.obj"
-	-@erase "$(INTDIR)\vc40.idb"
-	-@erase "$(INTDIR)\vc40.pdb"
-	-@erase "$(OUTDIR)\testthrd.exe"
-	-@erase "$(OUTDIR)\testthrd.ilk"
-	-@erase "$(OUTDIR)\testthrd.pdb"
+ALL :     "stdthrd - Win32 Debug" "$(OUTDIR)\testthrd.exe"
 
 "$(OUTDIR)" :
     if not exist "$(OUTDIR)/$(NULL)" mkdir "$(OUTDIR)"
@@ -500,9 +454,10 @@ CLEAN :
 
 CPP=cl.exe
 # ADD BASE CPP /nologo /W3 /Gm /GX /Zi /Od /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /YX /c
-# ADD CPP /nologo /G4 /MTd /W3 /Gm /GX /Zi /Od /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /YX /c
-CPP_PROJ=/nologo /G4 /MTd /W3 /Gm /GX /Zi /Od /D "WIN32" /D "_DEBUG" /D\
- "_CONSOLE" /Fp"$(INTDIR)/testthrd.pch" /YX /Fo"$(INTDIR)/" /Fd"$(INTDIR)/" /c 
+# ADD CPP /nologo /G5 /MTd /W3 /Gm /GX /Zi /Od /D "_DEBUG" /D "_CONSOLE" /D "WIN32" /D AVSTOR_CONFIG_THREAD_SAFE=1 /YX /c
+CPP_PROJ=/nologo /G5 /MTd /W3 /Gm /GX /Zi /Od /D "_DEBUG" /D "_CONSOLE" /D\
+ "WIN32" /D AVSTOR_CONFIG_THREAD_SAFE=1 /Fp"$(INTDIR)/testthrd.pch" /YX\
+ /Fo"$(INTDIR)/" /Fd"$(INTDIR)/" /c 
 CPP_OBJS=.\testthrd\Debug/
 CPP_SBRS=.\.
 
@@ -524,9 +479,6 @@ CPP_SBRS=.\.
 .cxx{$(CPP_SBRS)}.sbr:
    $(CPP) $(CPP_PROJ) $<  
 
-RSC=rc.exe
-# ADD BASE RSC /l 0x409
-# ADD RSC /l 0x409
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
@@ -564,11 +516,7 @@ LINK32_OBJS= \
 OUTDIR=.\bin\Release
 INTDIR=.\avstor\Release
 
-ALL : "$(OUTDIR)\avstor.lib"
-
-CLEAN : 
-	-@erase "$(INTDIR)\avstor.obj"
-	-@erase "$(OUTDIR)\avstor.lib"
+ALL :     "$(OUTDIR)\avstor.lib"
 
 "$(OUTDIR)" :
     if not exist "$(OUTDIR)/$(NULL)" mkdir "$(OUTDIR)"
@@ -578,9 +526,10 @@ CLEAN :
 
 CPP=cl.exe
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /YX /c
-# ADD CPP /nologo /G4 /MT /W3 /GX /O2 /I "..\..\include" /D "NDEBUG" /D "_WINDOWS" /D "WIN32" /YX /c
-CPP_PROJ=/nologo /G4 /MT /W3 /GX /O2 /I "..\..\include" /D "NDEBUG" /D\
- "_WINDOWS" /D "WIN32" /Fp"$(INTDIR)/avstor.pch" /YX /Fo"$(INTDIR)/" /c 
+# ADD CPP /nologo /G5 /MT /W3 /GX /O2 /I "..\..\include" /I "..\..\threads" /D "NDEBUG" /D "_WINDOWS" /D "WIN32" /D AVSTOR_CONFIG_THREAD_SAFE=1 /YX /c
+CPP_PROJ=/nologo /G5 /MT /W3 /GX /O2 /I "..\..\include" /I "..\..\threads" /D\
+ "NDEBUG" /D "_WINDOWS" /D "WIN32" /D AVSTOR_CONFIG_THREAD_SAFE=1\
+ /Fp"$(INTDIR)/avstor.pch" /YX /Fo"$(INTDIR)/" /c 
 CPP_OBJS=.\avstor\Release/
 CPP_SBRS=.\.
 
@@ -635,11 +584,7 @@ LIB32_OBJS= \
 OUTDIR=.\bin\Debug
 INTDIR=.\avstor\Debug
 
-ALL : "$(OUTDIR)\avstor.lib"
-
-CLEAN : 
-	-@erase "$(INTDIR)\avstor.obj"
-	-@erase "$(OUTDIR)\avstor.lib"
+ALL :     "$(OUTDIR)\avstor.lib"
 
 "$(OUTDIR)" :
     if not exist "$(OUTDIR)/$(NULL)" mkdir "$(OUTDIR)"
@@ -649,9 +594,10 @@ CLEAN :
 
 CPP=cl.exe
 # ADD BASE CPP /nologo /W3 /GX /Z7 /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /YX /c
-# ADD CPP /nologo /G4 /MTd /W3 /GX /Z7 /Od /I "..\..\include" /D "_DEBUG" /D "_WINDOWS" /D "WIN32" /YX /c
-CPP_PROJ=/nologo /G4 /MTd /W3 /GX /Z7 /Od /I "..\..\include" /D "_DEBUG" /D\
- "_WINDOWS" /D "WIN32" /Fp"$(INTDIR)/avstor.pch" /YX /Fo"$(INTDIR)/" /c 
+# ADD CPP /nologo /G5 /MTd /W3 /GX /Z7 /Od /I "..\..\include" /I "..\..\threads" /D "_DEBUG" /D "_WINDOWS" /D "WIN32" /D AVSTOR_CONFIG_THREAD_SAFE=1 /YX /c
+CPP_PROJ=/nologo /G5 /MTd /W3 /GX /Z7 /Od /I "..\..\include" /I "..\..\threads"\
+ /D "_DEBUG" /D "_WINDOWS" /D "WIN32" /D AVSTOR_CONFIG_THREAD_SAFE=1\
+ /Fp"$(INTDIR)/avstor.pch" /YX /Fo"$(INTDIR)/" /c 
 CPP_OBJS=.\avstor\Debug/
 CPP_SBRS=.\.
 
@@ -706,7 +652,11 @@ LIB32_OBJS= \
 OUTDIR=.\bin\MIPSDbg
 INTDIR=.\avstor\MIPSDbg
 
-ALL :  "$(OUTDIR)\avstor.lib"
+ALL : "$(OUTDIR)\avstor.lib"
+
+CLEAN : 
+	-@erase "$(INTDIR)\avstor.obj"
+	-@erase "$(OUTDIR)\avstor.lib"
 
 "$(OUTDIR)" :
     if not exist "$(OUTDIR)/$(NULL)" mkdir "$(OUTDIR)"
@@ -716,10 +666,10 @@ ALL :  "$(OUTDIR)\avstor.lib"
 
 CPP=cl.exe
 # ADD BASE CPP /nologo /Gt0 /QMOb2000 /W3 /GX /Z7 /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /YX /c
-# ADD CPP /nologo /MTd /Gt0 /QMOb2000 /W3 /GX /Z7 /Od /I "..\..\include" /D "_DEBUG" /D "_WINDOWS" /D "WIN32" /YX /c
-CPP_PROJ=/nologo /MTd /Gt0 /QMOb2000 /W3 /GX /Z7 /Od /I "..\..\include" /D\
- "_DEBUG" /D "_WINDOWS" /D "WIN32" /Fp"$(INTDIR)/avstor.pch" /YX /Fo"$(INTDIR)/"\
- /c 
+# ADD CPP /nologo /MTd /Gt0 /QMOb2000 /W3 /GX /Z7 /Od /I "..\..\include" /I "..\..\threads" /D "_DEBUG" /D "_WINDOWS" /D "WIN32" /D AVSTOR_CONFIG_THREAD_SAFE=1 /YX /c
+CPP_PROJ=/nologo /MTd /Gt0 /QMOb2000 /W3 /GX /Z7 /Od /I "..\..\include" /I\
+ "..\..\threads" /D "_DEBUG" /D "_WINDOWS" /D "WIN32" /D\
+ AVSTOR_CONFIG_THREAD_SAFE=1 /Fp"$(INTDIR)/avstor.pch" /YX /Fo"$(INTDIR)/" /c 
 CPP_OBJS=.\avstor\MIPSDbg/
 CPP_SBRS=.\.
 
@@ -775,7 +725,11 @@ BSC32_SBRS= \
 OUTDIR=.\bin\MIPSRel
 INTDIR=.\avstor\MIPSRel
 
-ALL :  "$(OUTDIR)\avstor.lib"
+ALL : "$(OUTDIR)\avstor.lib"
+
+CLEAN : 
+	-@erase "$(INTDIR)\avstor.obj"
+	-@erase "$(OUTDIR)\avstor.lib"
 
 "$(OUTDIR)" :
     if not exist "$(OUTDIR)/$(NULL)" mkdir "$(OUTDIR)"
@@ -785,9 +739,10 @@ ALL :  "$(OUTDIR)\avstor.lib"
 
 CPP=cl.exe
 # ADD BASE CPP /nologo /Gt0 /QMOb2000 /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /YX /c
-# ADD CPP /nologo /MT /Gt0 /QMOb2000 /W3 /GX /O2 /I "..\..\include" /D "NDEBUG" /D "_WINDOWS" /D "WIN32" /YX /c
-CPP_PROJ=/nologo /MT /Gt0 /QMOb2000 /W3 /GX /O2 /I "..\..\include" /D "NDEBUG"\
- /D "_WINDOWS" /D "WIN32" /Fp"$(INTDIR)/avstor.pch" /YX /Fo"$(INTDIR)/" /c 
+# ADD CPP /nologo /MT /Gt0 /QMOb2000 /W3 /GX /O2 /I "..\..\include" /I "..\..\threads" /D "NDEBUG" /D "_WINDOWS" /D "WIN32" /D AVSTOR_CONFIG_THREAD_SAFE=1 /YX /c
+CPP_PROJ=/nologo /MT /Gt0 /QMOb2000 /W3 /GX /O2 /I "..\..\include" /I\
+ "..\..\threads" /D "NDEBUG" /D "_WINDOWS" /D "WIN32" /D\
+ AVSTOR_CONFIG_THREAD_SAFE=1 /Fp"$(INTDIR)/avstor.pch" /YX /Fo"$(INTDIR)/" /c 
 CPP_OBJS=.\avstor\MIPSRel/
 CPP_SBRS=.\.
 
@@ -843,8 +798,15 @@ BSC32_SBRS= \
 OUTDIR=.\bin\MIPSRel
 INTDIR=.\avstest\MIPSRel
 
-ALL :  "avstor - Win32 MIPSRel" "stdthrd - Win32 MIPSRel"\
-  "$(OUTDIR)\avstest.exe"
+ALL : "avstor - Win32 MIPSRel" "stdthrd - Win32 MIPSRel"\
+ "$(OUTDIR)\avstest.exe"
+
+CLEAN : 
+	-@erase "$(INTDIR)\avsdb.obj"
+	-@erase "$(INTDIR)\avstest.obj"
+	-@erase "$(INTDIR)\timer.obj"
+	-@erase "$(INTDIR)\tst_dfs.obj"
+	-@erase "$(OUTDIR)\avstest.exe"
 
 "$(OUTDIR)" :
     if not exist "$(OUTDIR)/$(NULL)" mkdir "$(OUTDIR)"
@@ -854,9 +816,10 @@ ALL :  "avstor - Win32 MIPSRel" "stdthrd - Win32 MIPSRel"\
 
 CPP=cl.exe
 # ADD BASE CPP /nologo /Gt0 /QMOb2000 /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_CONSOLE" /YX /c
-# ADD CPP /nologo /MT /Gt0 /QMOb2000 /W3 /GX /O2 /I "..\..\include" /D "NDEBUG" /D "_CONSOLE" /D "WIN32" /YX /c
-CPP_PROJ=/nologo /MT /Gt0 /QMOb2000 /W3 /GX /O2 /I "..\..\include" /D "NDEBUG"\
- /D "_CONSOLE" /D "WIN32" /Fp"$(INTDIR)/build.pch" /YX /Fo"$(INTDIR)/" /c 
+# ADD CPP /nologo /MT /Gt0 /QMOb2000 /W3 /GX /O2 /I "..\..\include" /I "..\..\threads" /D "NDEBUG" /D "_CONSOLE" /D "WIN32" /D AVSTOR_CONFIG_THREAD_SAFE=1 /YX /c
+CPP_PROJ=/nologo /MT /Gt0 /QMOb2000 /W3 /GX /O2 /I "..\..\include" /I\
+ "..\..\threads" /D "NDEBUG" /D "_CONSOLE" /D "WIN32" /D\
+ AVSTOR_CONFIG_THREAD_SAFE=1 /Fp"$(INTDIR)/build.pch" /YX /Fo"$(INTDIR)/" /c 
 CPP_OBJS=.\avstest\MIPSRel/
 CPP_SBRS=.\.
 
@@ -878,6 +841,9 @@ CPP_SBRS=.\.
 .cxx{$(CPP_SBRS)}.sbr:
    $(CPP) $(CPP_PROJ) $<  
 
+RSC=rc.exe
+# ADD BASE RSC /l 0x409
+# ADD RSC /l 0x409
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib /nologo /subsystem:console /machine:MIPS
 # ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib /nologo /subsystem:console /machine:MIPS /out:"bin\MIPSRel/avstest.exe"
@@ -920,8 +886,18 @@ BSC32_SBRS= \
 OUTDIR=.\bin\MIPSDbg
 INTDIR=.\avstest\MIPSDbg
 
-ALL :  "avstor - Win32 MIPSDbg" "stdthrd - Win32 MIPSDbg"\
-  "$(OUTDIR)\avstest.exe"
+ALL : "avstor - Win32 MIPSDbg" "stdthrd - Win32 MIPSDbg"\
+ "$(OUTDIR)\avstest.exe"
+
+CLEAN : 
+	-@erase "$(INTDIR)\avsdb.obj"
+	-@erase "$(INTDIR)\avstest.obj"
+	-@erase "$(INTDIR)\timer.obj"
+	-@erase "$(INTDIR)\tst_dfs.obj"
+	-@erase "$(INTDIR)\vc40.pdb"
+	-@erase "$(OUTDIR)\avstest.exe"
+	-@erase "$(OUTDIR)\avstest.ilk"
+	-@erase "$(OUTDIR)\avstest.pdb"
 
 "$(OUTDIR)" :
     if not exist "$(OUTDIR)/$(NULL)" mkdir "$(OUTDIR)"
@@ -931,9 +907,10 @@ ALL :  "avstor - Win32 MIPSDbg" "stdthrd - Win32 MIPSDbg"\
 
 CPP=cl.exe
 # ADD BASE CPP /nologo /Gt0 /QMOb2000 /W3 /GX /Zi /Od /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /YX /c
-# ADD CPP /nologo /MTd /Gt0 /QMOb2000 /W3 /GX /Zi /Od /I "..\..\include" /D "_DEBUG" /D "_CONSOLE" /D "WIN32" /YX /c
-CPP_PROJ=/nologo /MTd /Gt0 /QMOb2000 /W3 /GX /Zi /Od /I "..\..\include" /D\
- "_DEBUG" /D "_CONSOLE" /D "WIN32" /Fp"$(INTDIR)/build.pch" /YX /Fo"$(INTDIR)/"\
+# ADD CPP /nologo /MTd /Gt0 /QMOb2000 /W3 /GX /Zi /Od /I "..\..\include" /I "..\..\threads" /D "_DEBUG" /D "_CONSOLE" /D "WIN32" /D AVSTOR_CONFIG_THREAD_SAFE=1 /YX /c
+CPP_PROJ=/nologo /MTd /Gt0 /QMOb2000 /W3 /GX /Zi /Od /I "..\..\include" /I\
+ "..\..\threads" /D "_DEBUG" /D "_CONSOLE" /D "WIN32" /D\
+ AVSTOR_CONFIG_THREAD_SAFE=1 /Fp"$(INTDIR)/build.pch" /YX /Fo"$(INTDIR)/"\
  /Fd"$(INTDIR)/" /c 
 CPP_OBJS=.\avstest\MIPSDbg/
 CPP_SBRS=.\.
@@ -956,6 +933,9 @@ CPP_SBRS=.\.
 .cxx{$(CPP_SBRS)}.sbr:
    $(CPP) $(CPP_PROJ) $<  
 
+RSC=rc.exe
+# ADD BASE RSC /l 0x409
+# ADD RSC /l 0x409
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib /nologo /subsystem:console /debug /machine:MIPS
 # SUBTRACT BASE LINK32 /incremental:no
@@ -1000,7 +980,13 @@ BSC32_SBRS= \
 OUTDIR=.\bin\MIPSRel
 INTDIR=.\stdthrd\MIPSRel
 
-ALL :  "$(OUTDIR)\stdthrd.lib"
+ALL : "$(OUTDIR)\stdthrd.lib"
+
+CLEAN : 
+	-@erase "$(INTDIR)\atomics.obj"
+	-@erase "$(INTDIR)\sync.obj"
+	-@erase "$(INTDIR)\thrd.obj"
+	-@erase "$(OUTDIR)\stdthrd.lib"
 
 "$(OUTDIR)" :
     if not exist "$(OUTDIR)/$(NULL)" mkdir "$(OUTDIR)"
@@ -1010,9 +996,11 @@ ALL :  "$(OUTDIR)\stdthrd.lib"
 
 CPP=cl.exe
 # ADD BASE CPP /nologo /Gt0 /QMOb2000 /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /YX /c
-# ADD CPP /nologo /MT /Gt0 /QMOb2000 /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /YX /c
-CPP_PROJ=/nologo /MT /Gt0 /QMOb2000 /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D\
- "_WINDOWS" /Fp"$(INTDIR)/stdthrd.pch" /YX /Fo"$(INTDIR)/" /c 
+# ADD CPP /nologo /QMR4600 /MT /Gt0 /QMOb2000 /W3 /GX /O2 /I "..\..\threads" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /YX /c
+# SUBTRACT CPP /Z<none>
+CPP_PROJ=/nologo /QMR4600 /MT /Gt0 /QMOb2000 /W3 /GX /O2 /I "..\..\threads" /D\
+ "WIN32" /D "NDEBUG" /D "_WINDOWS" /Fp"$(INTDIR)/stdthrd.pch" /YX\
+ /Fo"$(INTDIR)/" /c 
 CPP_OBJS=.\stdthrd\MIPSRel/
 CPP_SBRS=.\.
 
@@ -1070,7 +1058,13 @@ BSC32_SBRS= \
 OUTDIR=.\bin\MIPSDbg
 INTDIR=.\stdthrd\MIPSDbg
 
-ALL :  "$(OUTDIR)\stdthrd.lib"
+ALL : "$(OUTDIR)\stdthrd.lib"
+
+CLEAN : 
+	-@erase "$(INTDIR)\atomics.obj"
+	-@erase "$(INTDIR)\sync.obj"
+	-@erase "$(INTDIR)\thrd.obj"
+	-@erase "$(OUTDIR)\stdthrd.lib"
 
 "$(OUTDIR)" :
     if not exist "$(OUTDIR)/$(NULL)" mkdir "$(OUTDIR)"
@@ -1080,9 +1074,10 @@ ALL :  "$(OUTDIR)\stdthrd.lib"
 
 CPP=cl.exe
 # ADD BASE CPP /nologo /Gt0 /QMOb2000 /W3 /GX /Z7 /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /YX /c
-# ADD CPP /nologo /MTd /Gt0 /QMOb2000 /W3 /GX /Z7 /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /YX /c
-CPP_PROJ=/nologo /MTd /Gt0 /QMOb2000 /W3 /GX /Z7 /Od /D "WIN32" /D "_DEBUG" /D\
- "_WINDOWS" /Fp"$(INTDIR)/stdthrd.pch" /YX /Fo"$(INTDIR)/" /c 
+# ADD CPP /nologo /MTd /Gt0 /QMOb2000 /W3 /GX /Z7 /Od /I "..\..\threads" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /YX /c
+CPP_PROJ=/nologo /MTd /Gt0 /QMOb2000 /W3 /GX /Z7 /Od /I "..\..\threads" /D\
+ "WIN32" /D "_DEBUG" /D "_WINDOWS" /Fp"$(INTDIR)/stdthrd.pch" /YX\
+ /Fo"$(INTDIR)/" /c 
 CPP_OBJS=.\stdthrd\MIPSDbg/
 CPP_SBRS=.\.
 
@@ -1140,7 +1135,11 @@ BSC32_SBRS= \
 OUTDIR=.\bin\MIPSRel
 INTDIR=.\testthrd\MIPSRel
 
-ALL :  "stdthrd - Win32 MIPSRel" "$(OUTDIR)\testthrd.exe"
+ALL : "stdthrd - Win32 MIPSRel" "$(OUTDIR)\testthrd.exe"
+
+CLEAN : 
+	-@erase "$(INTDIR)\test.obj"
+	-@erase "$(OUTDIR)\testthrd.exe"
 
 "$(OUTDIR)" :
     if not exist "$(OUTDIR)/$(NULL)" mkdir "$(OUTDIR)"
@@ -1150,9 +1149,10 @@ ALL :  "stdthrd - Win32 MIPSRel" "$(OUTDIR)\testthrd.exe"
 
 CPP=cl.exe
 # ADD BASE CPP /nologo /Gt0 /QMOb2000 /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_CONSOLE" /YX /c
-# ADD CPP /nologo /MT /Gt0 /QMOb2000 /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_CONSOLE" /YX /c
-CPP_PROJ=/nologo /MT /Gt0 /QMOb2000 /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D\
- "_CONSOLE" /Fp"$(INTDIR)/testthrd.pch" /YX /Fo"$(INTDIR)/" /c 
+# ADD CPP /nologo /MT /Gt0 /QMOb2000 /W3 /GX /O2 /I "..\..\threads" /D "WIN32" /D "NDEBUG" /D "_CONSOLE" /YX /c
+# SUBTRACT CPP /Z<none>
+CPP_PROJ=/nologo /MT /Gt0 /QMOb2000 /W3 /GX /O2 /I "..\..\threads" /D "WIN32"\
+ /D "NDEBUG" /D "_CONSOLE" /Fp"$(INTDIR)/testthrd.pch" /YX /Fo"$(INTDIR)/" /c 
 CPP_OBJS=.\testthrd\MIPSRel/
 CPP_SBRS=.\.
 
@@ -1174,9 +1174,13 @@ CPP_SBRS=.\.
 .cxx{$(CPP_SBRS)}.sbr:
    $(CPP) $(CPP_PROJ) $<  
 
+RSC=rc.exe
+# ADD BASE RSC /l 0x409
+# ADD RSC /l 0x409
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib /nologo /subsystem:console /machine:MIPS
 # ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib /nologo /subsystem:console /machine:MIPS
+# SUBTRACT LINK32 /debug
 LINK32_FLAGS=kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib\
  advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib /nologo\
  /subsystem:console /incremental:no /pdb:"$(OUTDIR)/testthrd.pdb" /machine:MIPS\
@@ -1212,7 +1216,14 @@ BSC32_SBRS= \
 OUTDIR=.\bin\MIPSDbg
 INTDIR=.\testthrd\MIPSDbg
 
-ALL :  "stdthrd - Win32 MIPSDbg" "$(OUTDIR)\testthrd.exe"
+ALL : "stdthrd - Win32 MIPSDbg" "$(OUTDIR)\testthrd.exe"
+
+CLEAN : 
+	-@erase "$(INTDIR)\test.obj"
+	-@erase "$(INTDIR)\vc40.pdb"
+	-@erase "$(OUTDIR)\testthrd.exe"
+	-@erase "$(OUTDIR)\testthrd.ilk"
+	-@erase "$(OUTDIR)\testthrd.pdb"
 
 "$(OUTDIR)" :
     if not exist "$(OUTDIR)/$(NULL)" mkdir "$(OUTDIR)"
@@ -1222,9 +1233,10 @@ ALL :  "stdthrd - Win32 MIPSDbg" "$(OUTDIR)\testthrd.exe"
 
 CPP=cl.exe
 # ADD BASE CPP /nologo /Gt0 /QMOb2000 /W3 /GX /Zi /Od /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /YX /c
-# ADD CPP /nologo /MTd /Gt0 /QMOb2000 /W3 /GX /Zi /Od /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /YX /c
-CPP_PROJ=/nologo /MTd /Gt0 /QMOb2000 /W3 /GX /Zi /Od /D "WIN32" /D "_DEBUG" /D\
- "_CONSOLE" /Fp"$(INTDIR)/testthrd.pch" /YX /Fo"$(INTDIR)/" /Fd"$(INTDIR)/" /c 
+# ADD CPP /nologo /MTd /Gt0 /QMOb2000 /W3 /GX /Zi /Od /I "..\..\threads" /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /YX /c
+CPP_PROJ=/nologo /MTd /Gt0 /QMOb2000 /W3 /GX /Zi /Od /I "..\..\threads" /D\
+ "WIN32" /D "_DEBUG" /D "_CONSOLE" /Fp"$(INTDIR)/testthrd.pch" /YX\
+ /Fo"$(INTDIR)/" /Fd"$(INTDIR)/" /c 
 CPP_OBJS=.\testthrd\MIPSDbg/
 CPP_SBRS=.\.
 
@@ -1246,6 +1258,9 @@ CPP_SBRS=.\.
 .cxx{$(CPP_SBRS)}.sbr:
    $(CPP) $(CPP_PROJ) $<  
 
+RSC=rc.exe
+# ADD BASE RSC /l 0x409
+# ADD RSC /l 0x409
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib /nologo /subsystem:console /debug /machine:MIPS
 # SUBTRACT BASE LINK32 /incremental:no
@@ -1330,7 +1345,9 @@ DEP_CPP_TST_D=\
 	"..\..\include\avstor.h"\
 	"..\..\tests\avsdb.h"\
 	"..\..\tests\avstest.h"\
-	{$(INCLUDE)}"\stdint.h"\
+	"..\..\threads\stdatomic.h"\
+	"..\..\threads\threads.h"\
+	".\STDINT.H"\
 	
 
 "$(INTDIR)\tst_dfs.obj" : $(SOURCE) $(DEP_CPP_TST_D) "$(INTDIR)"
@@ -1343,7 +1360,9 @@ DEP_CPP_TST_D=\
 	"..\..\include\avstor.h"\
 	"..\..\tests\avsdb.h"\
 	"..\..\tests\avstest.h"\
-	{$(INCLUDE)}"\stdint.h"\
+	"..\..\threads\stdatomic.h"\
+	"..\..\threads\threads.h"\
+	".\STDINT.H"\
 	
 
 "$(INTDIR)\tst_dfs.obj" : $(SOURCE) $(DEP_CPP_TST_D) "$(INTDIR)"
@@ -1356,7 +1375,9 @@ DEP_CPP_TST_D=\
 	"..\..\include\avstor.h"\
 	"..\..\tests\avsdb.h"\
 	"..\..\tests\avstest.h"\
-	".\stdint.h"\
+	"..\..\threads\stdatomic.h"\
+	"..\..\threads\threads.h"\
+	{$(INCLUDE)}"\STDINT.H"\
 	
 
 "$(INTDIR)\tst_dfs.obj" : $(SOURCE) $(DEP_CPP_TST_D) "$(INTDIR)"
@@ -1369,7 +1390,9 @@ DEP_CPP_TST_D=\
 	"..\..\include\avstor.h"\
 	"..\..\tests\avsdb.h"\
 	"..\..\tests\avstest.h"\
-	".\stdint.h"\
+	"..\..\threads\stdatomic.h"\
+	"..\..\threads\threads.h"\
+	{$(INCLUDE)}"\STDINT.H"\
 	
 
 "$(INTDIR)\tst_dfs.obj" : $(SOURCE) $(DEP_CPP_TST_D) "$(INTDIR)"
@@ -1388,7 +1411,6 @@ SOURCE=\repos\libavstor\tests\timer.c
 
 DEP_CPP_TIMER=\
 	"..\..\tests\timer.h"\
-	{$(INCLUDE)}"\stdint.h"\
 	
 
 "$(INTDIR)\timer.obj" : $(SOURCE) $(DEP_CPP_TIMER) "$(INTDIR)"
@@ -1399,7 +1421,6 @@ DEP_CPP_TIMER=\
 
 DEP_CPP_TIMER=\
 	"..\..\tests\timer.h"\
-	{$(INCLUDE)}"\stdint.h"\
 	
 
 "$(INTDIR)\timer.obj" : $(SOURCE) $(DEP_CPP_TIMER) "$(INTDIR)"
@@ -1410,7 +1431,6 @@ DEP_CPP_TIMER=\
 
 DEP_CPP_TIMER=\
 	"..\..\tests\timer.h"\
-	".\stdint.h"\
 	
 
 "$(INTDIR)\timer.obj" : $(SOURCE) $(DEP_CPP_TIMER) "$(INTDIR)"
@@ -1421,7 +1441,6 @@ DEP_CPP_TIMER=\
 
 DEP_CPP_TIMER=\
 	"..\..\tests\timer.h"\
-	".\stdint.h"\
 	
 
 "$(INTDIR)\timer.obj" : $(SOURCE) $(DEP_CPP_TIMER) "$(INTDIR)"
@@ -1442,7 +1461,9 @@ DEP_CPP_AVSTE=\
 	"..\..\include\avstor.h"\
 	"..\..\tests\avstest.h"\
 	"..\..\tests\timer.h"\
-	{$(INCLUDE)}"\stdint.h"\
+	".\STDINT.H"\
+	".\sys\STAT.H"\
+	".\sys\TYPES.H"\
 	
 
 "$(INTDIR)\avstest.obj" : $(SOURCE) $(DEP_CPP_AVSTE) "$(INTDIR)"
@@ -1455,7 +1476,9 @@ DEP_CPP_AVSTE=\
 	"..\..\include\avstor.h"\
 	"..\..\tests\avstest.h"\
 	"..\..\tests\timer.h"\
-	{$(INCLUDE)}"\stdint.h"\
+	".\STDINT.H"\
+	".\sys\STAT.H"\
+	".\sys\TYPES.H"\
 	
 
 "$(INTDIR)\avstest.obj" : $(SOURCE) $(DEP_CPP_AVSTE) "$(INTDIR)"
@@ -1468,7 +1491,9 @@ DEP_CPP_AVSTE=\
 	"..\..\include\avstor.h"\
 	"..\..\tests\avstest.h"\
 	"..\..\tests\timer.h"\
-	".\stdint.h"\
+	{$(INCLUDE)}"\STDINT.H"\
+	{$(INCLUDE)}"\sys\STAT.H"\
+	{$(INCLUDE)}"\sys\TYPES.H"\
 	
 
 "$(INTDIR)\avstest.obj" : $(SOURCE) $(DEP_CPP_AVSTE) "$(INTDIR)"
@@ -1481,7 +1506,9 @@ DEP_CPP_AVSTE=\
 	"..\..\include\avstor.h"\
 	"..\..\tests\avstest.h"\
 	"..\..\tests\timer.h"\
-	".\stdint.h"\
+	{$(INCLUDE)}"\STDINT.H"\
+	{$(INCLUDE)}"\sys\STAT.H"\
+	{$(INCLUDE)}"\sys\TYPES.H"\
 	
 
 "$(INTDIR)\avstest.obj" : $(SOURCE) $(DEP_CPP_AVSTE) "$(INTDIR)"
@@ -1500,7 +1527,7 @@ SOURCE=\repos\libavstor\tests\avsdb.c
 
 DEP_CPP_AVSDB=\
 	"..\..\tests\avsdb.h"\
-	{$(INCLUDE)}"\stdint.h"\
+	".\STDINT.H"\
 	
 
 "$(INTDIR)\avsdb.obj" : $(SOURCE) $(DEP_CPP_AVSDB) "$(INTDIR)"
@@ -1511,7 +1538,7 @@ DEP_CPP_AVSDB=\
 
 DEP_CPP_AVSDB=\
 	"..\..\tests\avsdb.h"\
-	{$(INCLUDE)}"\stdint.h"\
+	".\STDINT.H"\
 	
 
 "$(INTDIR)\avsdb.obj" : $(SOURCE) $(DEP_CPP_AVSDB) "$(INTDIR)"
@@ -1522,7 +1549,7 @@ DEP_CPP_AVSDB=\
 
 DEP_CPP_AVSDB=\
 	"..\..\tests\avsdb.h"\
-	".\stdint.h"\
+	{$(INCLUDE)}"\STDINT.H"\
 	
 
 "$(INTDIR)\avsdb.obj" : $(SOURCE) $(DEP_CPP_AVSDB) "$(INTDIR)"
@@ -1533,7 +1560,7 @@ DEP_CPP_AVSDB=\
 
 DEP_CPP_AVSDB=\
 	"..\..\tests\avsdb.h"\
-	".\stdint.h"\
+	{$(INCLUDE)}"\STDINT.H"\
 	
 
 "$(INTDIR)\avsdb.obj" : $(SOURCE) $(DEP_CPP_AVSDB) "$(INTDIR)"
@@ -1598,8 +1625,10 @@ SOURCE=\repos\libavstor\threads\thrd.c
 !IF  "$(CFG)" == "stdthrd - Win32 Release"
 
 DEP_CPP_THRD_=\
+	"..\..\threads\_threads.h"\
 	"..\..\threads\stdatomic.h"\
 	"..\..\threads\threads.h"\
+	".\STDINT.H"\
 	
 
 "$(INTDIR)\thrd.obj" : $(SOURCE) $(DEP_CPP_THRD_) "$(INTDIR)"
@@ -1609,8 +1638,10 @@ DEP_CPP_THRD_=\
 !ELSEIF  "$(CFG)" == "stdthrd - Win32 Debug"
 
 DEP_CPP_THRD_=\
+	"..\..\threads\_threads.h"\
 	"..\..\threads\stdatomic.h"\
 	"..\..\threads\threads.h"\
+	".\STDINT.H"\
 	
 
 "$(INTDIR)\thrd.obj" : $(SOURCE) $(DEP_CPP_THRD_) "$(INTDIR)"
@@ -1620,8 +1651,10 @@ DEP_CPP_THRD_=\
 !ELSEIF  "$(CFG)" == "stdthrd - Win32 MIPSRel"
 
 DEP_CPP_THRD_=\
+	"..\..\threads\_threads.h"\
 	"..\..\threads\stdatomic.h"\
 	"..\..\threads\threads.h"\
+	{$(INCLUDE)}"\STDINT.H"\
 	
 
 "$(INTDIR)\thrd.obj" : $(SOURCE) $(DEP_CPP_THRD_) "$(INTDIR)"
@@ -1631,8 +1664,10 @@ DEP_CPP_THRD_=\
 !ELSEIF  "$(CFG)" == "stdthrd - Win32 MIPSDbg"
 
 DEP_CPP_THRD_=\
+	"..\..\threads\_threads.h"\
 	"..\..\threads\stdatomic.h"\
 	"..\..\threads\threads.h"\
+	{$(INCLUDE)}"\STDINT.H"\
 	
 
 "$(INTDIR)\thrd.obj" : $(SOURCE) $(DEP_CPP_THRD_) "$(INTDIR)"
@@ -1650,6 +1685,7 @@ SOURCE=\repos\libavstor\threads\sync.c
 !IF  "$(CFG)" == "stdthrd - Win32 Release"
 
 DEP_CPP_SYNC_=\
+	"..\..\threads\_threads.h"\
 	"..\..\threads\stdatomic.h"\
 	"..\..\threads\threads.h"\
 	
@@ -1661,6 +1697,7 @@ DEP_CPP_SYNC_=\
 !ELSEIF  "$(CFG)" == "stdthrd - Win32 Debug"
 
 DEP_CPP_SYNC_=\
+	"..\..\threads\_threads.h"\
 	"..\..\threads\stdatomic.h"\
 	"..\..\threads\threads.h"\
 	
@@ -1672,6 +1709,7 @@ DEP_CPP_SYNC_=\
 !ELSEIF  "$(CFG)" == "stdthrd - Win32 MIPSRel"
 
 DEP_CPP_SYNC_=\
+	"..\..\threads\_threads.h"\
 	"..\..\threads\stdatomic.h"\
 	"..\..\threads\threads.h"\
 	
@@ -1683,6 +1721,7 @@ DEP_CPP_SYNC_=\
 !ELSEIF  "$(CFG)" == "stdthrd - Win32 MIPSDbg"
 
 DEP_CPP_SYNC_=\
+	"..\..\threads\_threads.h"\
 	"..\..\threads\stdatomic.h"\
 	"..\..\threads\threads.h"\
 	
@@ -1791,7 +1830,6 @@ DEP_CPP_TEST_=\
 !ELSEIF  "$(CFG)" == "testthrd - Win32 MIPSRel"
 
 DEP_CPP_TEST_=\
-	"..\..\threads\stdatomic.h"\
 	"..\..\threads\threads.h"\
 	
 
@@ -1869,11 +1907,9 @@ SOURCE=\repos\libavstor\src\avstor.c
 
 DEP_CPP_AVSTO=\
 	"..\..\include\avstor.h"\
-	"..\..\threads\stdatomic.h"\
-	"..\..\threads\threads.h"\
-	{$(INCLUDE)}"\stdint.h"\
-	{$(INCLUDE)}"\sys\stat.h"\
-	{$(INCLUDE)}"\sys\types.h"\
+	".\STDINT.H"\
+	".\sys\STAT.H"\
+	".\sys\TYPES.H"\
 	
 
 "$(INTDIR)\avstor.obj" : $(SOURCE) $(DEP_CPP_AVSTO) "$(INTDIR)"
@@ -1884,11 +1920,9 @@ DEP_CPP_AVSTO=\
 
 DEP_CPP_AVSTO=\
 	"..\..\include\avstor.h"\
-	"..\..\threads\stdatomic.h"\
-	"..\..\threads\threads.h"\
-	{$(INCLUDE)}"\stdint.h"\
-	{$(INCLUDE)}"\sys\stat.h"\
-	{$(INCLUDE)}"\sys\types.h"\
+	".\STDINT.H"\
+	".\sys\STAT.H"\
+	".\sys\TYPES.H"\
 	
 
 "$(INTDIR)\avstor.obj" : $(SOURCE) $(DEP_CPP_AVSTO) "$(INTDIR)"
@@ -1901,9 +1935,9 @@ DEP_CPP_AVSTO=\
 	"..\..\include\avstor.h"\
 	"..\..\threads\stdatomic.h"\
 	"..\..\threads\threads.h"\
-	".\stdint.h"\
-	".\sys\stat.h"\
-	".\sys\types.h"\
+	{$(INCLUDE)}"\STDINT.H"\
+	{$(INCLUDE)}"\sys\STAT.H"\
+	{$(INCLUDE)}"\sys\TYPES.H"\
 	
 
 "$(INTDIR)\avstor.obj" : $(SOURCE) $(DEP_CPP_AVSTO) "$(INTDIR)"
@@ -1916,9 +1950,9 @@ DEP_CPP_AVSTO=\
 	"..\..\include\avstor.h"\
 	"..\..\threads\stdatomic.h"\
 	"..\..\threads\threads.h"\
-	".\stdint.h"\
-	".\sys\stat.h"\
-	".\sys\types.h"\
+	{$(INCLUDE)}"\STDINT.H"\
+	{$(INCLUDE)}"\sys\STAT.H"\
+	{$(INCLUDE)}"\sys\TYPES.H"\
 	
 
 "$(INTDIR)\avstor.obj" : $(SOURCE) $(DEP_CPP_AVSTO) "$(INTDIR)"
