@@ -3518,7 +3518,7 @@ int AVCALL avstor_open(avstor **pdb, const char* filename, unsigned szcache, int
     {
         if (oflags & AVSTOR_OPEN_CREATE) {
 #if defined(AVSTOR_CONFIG_THREAD_SAFE)
-            if ((result = avstor_lock_acquire(db, AVSTOR_LOCK_EXCLUSIVE)) == AVSTOR_OK) {
+            if (avstor_lock_acquire(db, AVSTOR_LOCK_EXCLUSIVE) == AVSTOR_OK) {
 #endif
                 db_create_file(db, filename, oflags);
                 *pdb = db;
@@ -3531,9 +3531,9 @@ int AVCALL avstor_open(avstor **pdb, const char* filename, unsigned szcache, int
         }
         else {
             db_open_file(db, filename, oflags);
-            *pdb = db;
-            result = AVSTOR_OK;
+            *pdb = db;           
         }
+        result = AVSTOR_OK;
     }
     CATCH_ANY(ex)
     {
