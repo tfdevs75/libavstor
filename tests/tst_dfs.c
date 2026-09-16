@@ -307,11 +307,7 @@ static int dfs_traversal_st(void *param, int64_t *out_node_total, int64_t *out_b
 
 #if defined(AVSTOR_CONFIG_THREAD_SAFE)
 
-#if (defined(__STDC_VERSION__) && (__STDC_VERSION__ >=201112L))
 #include <threads.h>
-#else
-#include "../threads/threads.h"
-#endif
 
 struct dfs_thread_param {
     thrd_t thr;

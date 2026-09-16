@@ -87,35 +87,28 @@
 #if defined(AVSTOR_CONFIG_THREAD_SAFE)
 
 // Force C11 TLS function usage on compiler/platform combos where __thread doesn't work
-#if (defined(__WATCOMC__) && defined(__OS2__)) || (defined(__GNUC__) && defined(__CYGWIN__))
+#if (defined(__WATCOMC__) && defined(__OS2__)) || (defined(__GNUC__) && defined(__CYGWIN__)) \
+    || (defined(__MINGW32__) && !defined(STDTHREAD_CONFIG_USE_PTHREAD))
 #define USE_STDTHRD_TLS 1
 #endif
-
-#if (defined(__STDC_VERSION__) && (__STDC_VERSION__ >=201112L))
-
-// Use C11 atomics and synchronization primitives if available
 
 #include <stdatomic.h>
 #include <threads.h>
 
+#if defined(_STDATOMIC_HAS_ATOMIC_INT_INC)
+#define atomic_inc_int                        _atomic_inc
+#else
 #define atomic_inc_int(addend)                (atomic_fetch_add((addend), 1) + 1)
+#endif
+
+#if defined(_STDATOMIC_HAS_ATOMIC_INT_DEC)
+#define atomic_dec_int                        _atomic_dec
+#else
 #define atomic_dec_int(addend)                (atomic_fetch_add((addend), -1) - 1)
+#endif
+
 #define atomic_load_int_acquire(x)            atomic_load_explicit((x), memory_order_acquire)
 #define atomic_store_int_release(x, value)    atomic_store_explicit((x), (value), memory_order_release)
-
-#else
-
-// Otherwise use our custom atomics implementation
-
-#include "../threads/stdatomic.h"
-#include "../threads/threads.h"
-
-#define atomic_inc_int                        _atomic_inc
-#define atomic_dec_int                        _atomic_dec
-#define atomic_load_int_acquire               atomic_load
-#define atomic_store_int_release              atomic_store
-
-#endif
 
 #if defined(_WIN32) && (_WIN32_WINNT >= 0x0600)
 
