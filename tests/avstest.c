@@ -99,7 +99,7 @@ static const char *AVS_TARGET_ARCH =
 #elif defined(__powerpc64__) || defined(__ppc64__) || defined(__PPC64__) || defined(_ARCH_PPC64) || defined(_ARCH_PPC64)
 "powerpc64"
 #if (defined(__LITTLE_ENDIAN__) && __LITTLE_ENDIAN__ == 1) || defined(_WIN32)
-"le"
+"el"
 #endif
 #elif defined(__powerpc) || defined(__powerpc__) || defined(__POWERPC__) || defined(__ppc__) \
     || defined(__PPC__) || defined(_M_PPC) || defined(__M_PPC) || defined(__ppc)
@@ -112,7 +112,7 @@ static const char *AVS_TARGET_ARCH =
 "32"
 #endif
 #if (defined(__LITTLE_ENDIAN__) && __LITTLE_ENDIAN__ == 1)
-"le"
+"el"
 #endif
 #else
 "unknown"
