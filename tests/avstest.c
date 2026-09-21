@@ -104,6 +104,16 @@ static const char *AVS_TARGET_ARCH =
 #elif defined(__powerpc) || defined(__powerpc__) || defined(__POWERPC__) || defined(__ppc__) \
     || defined(__PPC__) || defined(_M_PPC) || defined(__M_PPC) || defined(__ppc)
 "powerpc"
+#elif defined(__riscv)
+"riscv"
+#if defined(__riscv_xlen) && __riscv_xlen == 64
+"64"
+#else
+"32"
+#endif
+#if (defined(__LITTLE_ENDIAN__) && __LITTLE_ENDIAN__ == 1)
+"le"
+#endif
 #else
 "unknown"
 #endif
