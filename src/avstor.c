@@ -3436,7 +3436,7 @@ static void AVCALL db_create_file(avstor *db, const char* filename, int oflags)
     hdr->h.pagesize = PAGE_SIZE;
     hdr->h.root = NODEREF_NULL;
 #if defined(AVSTOR_CONFIG_FILE_64BIT)
-    hdr->flags = AVSTOR_FILE_64BIT;
+    hdr->h.flags = AVSTOR_FILE_64BIT;
 #endif
     if (AVSTOR_OK != (result = avstor_commit(db, 1))) {
         THROW(result, "Failed to initialize file");
