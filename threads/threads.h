@@ -98,8 +98,8 @@ typedef struct _usem {
 } _usem;
 
 typedef struct mtx {    
-    volatile atomic_int _lock;
-    volatile atomic_int _count;
+    atomic_int          _lock;
+    atomic_int          _count;
     int                 _type;
     struct _usem        _wait_sem;
 } mtx_t;

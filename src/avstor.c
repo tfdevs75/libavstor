@@ -348,8 +348,8 @@ struct AvPage {
     // lock count
 #if defined(AVSTOR_CONFIG_THREAD_SAFE)
     union {
-        volatile atomic_int lock_count;
-        volatile int32_t    lock_count_i32;
+        atomic_int      lock_count;
+        int32_t         lock_count_i32;
     };
 #else
     int32_t             lock_count;
