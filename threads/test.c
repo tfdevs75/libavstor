@@ -130,7 +130,7 @@ int done = 0;
 
 struct queue *qu;
 
-static int __cdecl prod_func(void *param)
+static int prod_func(void *param)
 {
     producer_t *p = (producer_t*)param;
     long i;
@@ -154,7 +154,7 @@ static int __cdecl prod_func(void *param)
     return 0;
 }
 
-static int __cdecl cons_func(void *param)
+static int cons_func(void *param)
 {
     consumer_t *p = (consumer_t *)param;
     mtx_lock(&_mtx_queue);

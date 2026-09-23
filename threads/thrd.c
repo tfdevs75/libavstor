@@ -56,7 +56,7 @@ static void *thrdproc(void *param)
     return (void*)(intptr_t)func(arg);
 }
 
-int __cdecl thrd_create(thrd_t *thr, thrd_start_t func, void *arg)
+int thrd_create(thrd_t *thr, thrd_start_t func, void *arg)
 {
     struct _thrd_param *param = malloc(sizeof(*param));
     if (param == NULL) {
@@ -72,12 +72,12 @@ int __cdecl thrd_create(thrd_t *thr, thrd_start_t func, void *arg)
     }
 }
 
-thrd_t __cdecl thrd_current(void)
+thrd_t thrd_current(void)
 {
     return pthread_self();
 }
 
-int __cdecl thrd_detach(thrd_t thr)
+int thrd_detach(thrd_t thr)
 {
     switch (pthread_detach(thr)) {
     case 0:         return thrd_success;
@@ -85,19 +85,19 @@ int __cdecl thrd_detach(thrd_t thr)
     }
 }
 
-int __cdecl thrd_equal(thrd_t lhs, thrd_t rhs)
+int thrd_equal(thrd_t lhs, thrd_t rhs)
 {
     return pthread_equal(lhs, rhs);
 }
 
-void __cdecl thrd_exit(int res)
+void thrd_exit(int res)
 {
     pthread_exit((void *)(intptr_t)res);
     for (;;)
         ;
 }
 
-int __cdecl thrd_join(thrd_t thr, int *res)
+int thrd_join(thrd_t thr, int *res)
 {
     void *p_res;
     switch (pthread_join(thr, &p_res)) {
@@ -107,12 +107,12 @@ int __cdecl thrd_join(thrd_t thr, int *res)
 
 }
 
-void __cdecl thrd_yield(void)
+void thrd_yield(void)
 {
     sched_yield();
 }
 
-int __cdecl tss_create(tss_t *tss_key, tss_dtor_t destructor)
+int tss_create(tss_t *tss_key, tss_dtor_t destructor)
 {
     switch (pthread_key_create(tss_key, destructor)) {
     case 0:         return thrd_success;
@@ -122,7 +122,7 @@ int __cdecl tss_create(tss_t *tss_key, tss_dtor_t destructor)
     }
 }
 
-int __cdecl tss_delete(tss_t tss_id)
+int tss_delete(tss_t tss_id)
 {
     switch (pthread_key_delete(tss_id)) {
     case 0:         return thrd_success;
@@ -130,7 +130,7 @@ int __cdecl tss_delete(tss_t tss_id)
     }
 }
 
-int __cdecl tss_set(tss_t tss_id, void *val)
+int tss_set(tss_t tss_id, void *val)
 {
     switch (pthread_setspecific(tss_id, val)) {
     case 0:         return thrd_success;
@@ -138,12 +138,12 @@ int __cdecl tss_set(tss_t tss_id, void *val)
     }
 }
 
-void *__cdecl tss_get(tss_t tss_key)
+void *tss_get(tss_t tss_key)
 {
     return pthread_getspecific(tss_key);
 }
 
-void __cdecl call_once(once_flag *flag, void(*_Func)(void))
+void call_once(once_flag *flag, void(*_Func)(void))
 {
     pthread_once(flag, _Func);
 }
@@ -201,8 +201,8 @@ static signed char  TLSIndexMap[_MAX_TLS_KEY + 1] = { 0 };
 static tss_dtor_t   TLSDestructors[_MAX_TLS_KEY + 1] = { NULL };
 static mtx_t        mtx_tls;
 
-extern int __cdecl _cnd_init(cnd_t *cond);
-extern int __cdecl _mtx_init(mtx_t *mtx, int type);
+extern int _cnd_init(cnd_t *cond);
+extern int _mtx_init(mtx_t *mtx, int type);
 
 static int create_thread_event(struct _tld *tdata)
 {
@@ -407,7 +407,7 @@ err_event:
     return 0;
 }
 
-int __cdecl _thrd_create_ex(thrd_t *thr, thrd_start_t func, void *arg, void *stack_bottom, size_t stack_size)
+int _thrd_create_ex(thrd_t *thr, thrd_start_t func, void *arg, void *stack_bottom, size_t stack_size)
 {
     struct ThreadParams param;
     thrd_t l_thr;
@@ -449,13 +449,13 @@ finalize_and_return:
     return result;
 }
 
-int __cdecl thrd_equal(thrd_t lhs, thrd_t rhs)
+int thrd_equal(thrd_t lhs, thrd_t rhs)
 {
     return lhs._ThreadID == rhs._ThreadID;
 }
 
 NORETURN
-void __cdecl thrd_exit(int res)
+void thrd_exit(int res)
 {
     struct _tld *tdata = THREAD_DATA;
     finalize_tls_data(tdata);
@@ -467,7 +467,7 @@ void __cdecl thrd_exit(int res)
         ;
 }
 
-int __cdecl thrd_detach(thrd_t thr)
+int thrd_detach(thrd_t thr)
 {
     if (thr._Handle) {
         return CloseHandle(thr._Handle) ? thrd_success : thrd_error;
@@ -475,7 +475,7 @@ int __cdecl thrd_detach(thrd_t thr)
     return thrd_error;
 }
 
-int __cdecl thrd_join(thrd_t thr, int *res)
+int thrd_join(thrd_t thr, int *res)
 {
     DWORD result;
     while (WAIT_IO_COMPLETION == (result = WaitForSingleObjectEx(thr._Handle, INFINITE, TRUE)))
@@ -525,7 +525,7 @@ static int os_sleep(const struct timespec *ts)
     }
 }
 
-void __cdecl thrd_yield(void)
+void thrd_yield(void)
 {
 #if _WIN32_WINNT >= 0x0400
     SwitchToThread();
@@ -616,7 +616,7 @@ static void wait_for_thread_to_die(struct _tld *tdata)
 }
 
 // Asynchronously cleans up detached threads
-static int __cdecl detach_thrdproc(void *arg)
+static int detach_thrdproc(void *arg)
 {
     (void)arg;
     while (1) {
@@ -705,7 +705,7 @@ threadproc(void *arglist)
     thrd_exit(p_func(arglist));
 }
 
-static int __cdecl __thrd_create_ex(thrd_t *thr, thrd_start_t func, void *arg, void *stack_bottom, size_t stack_size)
+static int __thrd_create_ex(thrd_t *thr, thrd_start_t func, void *arg, void *stack_bottom, size_t stack_size)
 {
     void *l_stack;
     int result, create_result;
@@ -844,19 +844,19 @@ void __init_stdthread(void)
     }
 }
 
-int __cdecl _thrd_create_ex(thrd_t *thr, thrd_start_t func, void *arg, void *stack_bottom, size_t stack_size)
+int _thrd_create_ex(thrd_t *thr, thrd_start_t func, void *arg, void *stack_bottom, size_t stack_size)
 {
     call_once_init_stdthread();
     return __thrd_create_ex(thr, func, arg, stack_bottom, stack_size);
 }
 
-int __cdecl thrd_equal(thrd_t lhs, thrd_t rhs)
+int thrd_equal(thrd_t lhs, thrd_t rhs)
 {
     return lhs._thr_id == rhs._thr_id && lhs._thr_data == rhs._thr_data;
 }
 
 __declspec(noreturn)
-void __cdecl thrd_exit(int res)
+void thrd_exit(int res)
 {
     struct _tld *tdata = THREAD_DATA;
 
@@ -908,7 +908,7 @@ void __cdecl thrd_exit(int res)
     _endthread();
 }
 
-int __cdecl thrd_detach(thrd_t thr)
+int thrd_detach(thrd_t thr)
 {
     struct _tld *tdata;
     int result;
@@ -936,7 +936,7 @@ int __cdecl thrd_detach(thrd_t thr)
     return result;
 }
 
-int __cdecl thrd_join(thrd_t thr, int *res)
+int thrd_join(thrd_t thr, int *res)
 {
     struct _tld *tdata;
 
@@ -1020,14 +1020,14 @@ static int os_sleep(const struct timespec *ts)
     }
 }
 
-void __cdecl thrd_yield(void)
+void thrd_yield(void)
 {
     _cpu_pause();
 }
 
 #endif
 
-int __cdecl thrd_sleep(const struct timespec *duration, struct timespec *remaining)
+int thrd_sleep(const struct timespec *duration, struct timespec *remaining)
 {
     struct timespec ts_start, ts_end;
     int result;
@@ -1056,7 +1056,7 @@ int __cdecl thrd_sleep(const struct timespec *duration, struct timespec *remaini
     return result;
 }
 
-int __cdecl tss_create(tss_t *tss_key, tss_dtor_t destructor)
+int tss_create(tss_t *tss_key, tss_dtor_t destructor)
 {
     unsigned i;
     int result = thrd_error;
@@ -1078,7 +1078,7 @@ int __cdecl tss_create(tss_t *tss_key, tss_dtor_t destructor)
     return result;
 }
 
-int __cdecl tss_delete(tss_t tss_id)
+int tss_delete(tss_t tss_id)
 {
     if (tss_id._key > _MAX_TLS_KEY) {
         return thrd_error;
@@ -1096,7 +1096,7 @@ int __cdecl tss_delete(tss_t tss_id)
     return thrd_success;
 }
 
-int __cdecl tss_set(tss_t tss_id, void *val)
+int tss_set(tss_t tss_id, void *val)
 {
     if (tss_id._key > _MAX_TLS_KEY) {
         return thrd_error;
@@ -1105,7 +1105,7 @@ int __cdecl tss_set(tss_t tss_id, void *val)
     return thrd_success;
 }
 
-void* __cdecl tss_get(tss_t tss_key)
+void* tss_get(tss_t tss_key)
 {
     if (tss_key._key > _MAX_TLS_KEY || !TLSIndexMap[tss_key._key]) {
         return NULL;
@@ -1113,17 +1113,17 @@ void* __cdecl tss_get(tss_t tss_key)
     return THREAD_DATA->tls_data[tss_key._key];
 }
 
-int __cdecl thrd_create(thrd_t *thr, thrd_start_t func, void *arg)
+int thrd_create(thrd_t *thr, thrd_start_t func, void *arg)
 {
     return _thrd_create_ex(thr, func, arg, NULL, 0);
 }
 
-thrd_t __cdecl thrd_current(void)
+thrd_t thrd_current(void)
 {
     return THREAD_DATA->thr;
 }
 
-void __cdecl call_once(once_flag *_flag, void(*_func)(void))
+void call_once(once_flag *_flag, void(*_func)(void))
 {
     int cur = 0;
     if (atomic_compare_exchange_strong(_flag, &cur, -1)) {

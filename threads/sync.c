@@ -35,7 +35,7 @@
 
 #include "_threads.h"
 
-int __cdecl mtx_init(mtx_t *mtx, int type)
+int mtx_init(mtx_t *mtx, int type)
 {
     pthread_mutexattr_t attr;
     int result;
@@ -60,12 +60,12 @@ int __cdecl mtx_init(mtx_t *mtx, int type)
     }
 }
 
-void __cdecl mtx_destroy(mtx_t *mtx)
+void mtx_destroy(mtx_t *mtx)
 {
     (void)pthread_mutex_destroy(mtx);
 }
 
-int __cdecl mtx_trylock(mtx_t *mtx)
+int mtx_trylock(mtx_t *mtx)
 {
     switch (pthread_mutex_trylock(mtx)) {
     case 0:         return thrd_success;
@@ -74,7 +74,7 @@ int __cdecl mtx_trylock(mtx_t *mtx)
     }
 }
 
-int __cdecl mtx_lock(mtx_t *mtx)
+int mtx_lock(mtx_t *mtx)
 {
     switch (pthread_mutex_lock(mtx)) {
     case 0:         return thrd_success;
@@ -82,7 +82,7 @@ int __cdecl mtx_lock(mtx_t *mtx)
     }
 }
 
-int __cdecl mtx_unlock(mtx_t *mtx)
+int mtx_unlock(mtx_t *mtx)
 {
     switch (pthread_mutex_unlock(mtx)) {
     case 0:         return thrd_success;
@@ -90,7 +90,7 @@ int __cdecl mtx_unlock(mtx_t *mtx)
     }
 }
 
-int __cdecl cnd_init(cnd_t* cond)
+int cnd_init(cnd_t* cond)
 {
     switch (pthread_cond_init(cond, NULL)) {
     case 0:         return thrd_success;
@@ -100,12 +100,12 @@ int __cdecl cnd_init(cnd_t* cond)
     }
 }
 
-void __cdecl cnd_destroy(cnd_t *cond)
+void cnd_destroy(cnd_t *cond)
 {
     (void)pthread_cond_destroy(cond);
 }
 
-int __cdecl cnd_signal(cnd_t *cond)
+int cnd_signal(cnd_t *cond)
 {
     switch (pthread_cond_signal(cond)) {
     case 0:         return thrd_success;
@@ -113,7 +113,7 @@ int __cdecl cnd_signal(cnd_t *cond)
     }
 }
 
-int __cdecl cnd_broadcast(cnd_t *cond)
+int cnd_broadcast(cnd_t *cond)
 {
     switch (pthread_cond_broadcast(cond)) {
     case 0:         return thrd_success;
@@ -121,7 +121,7 @@ int __cdecl cnd_broadcast(cnd_t *cond)
     }
 }
 
-int __cdecl cnd_wait(cnd_t *cond, mtx_t *mtx)
+int cnd_wait(cnd_t *cond, mtx_t *mtx)
 {
     switch (pthread_cond_wait(cond, mtx)) {
     case 0:         return thrd_success;
@@ -173,7 +173,7 @@ int __cdecl cnd_wait(cnd_t *cond, mtx_t *mtx)
 // TODO: more robust checking of return values
 // TODO: cache-friendliness
 
-int __cdecl _mtx_init(mtx_t *mtx, int type);
+int _mtx_init(mtx_t *mtx, int type);
 
 //
 // An MCS parking lock
@@ -228,7 +228,7 @@ static void mcs_lock_release(struct _mcs_lock *ml, struct _mcs_node *ctx)
 // User space counting semaphore. These will be significantly faster for
 // the uncontended case, since we don't need to call into the kernel
 //
-static int __cdecl _usem_init(struct _usem *sem, short initial_count, short max_count)
+static int _usem_init(struct _usem *sem, short initial_count, short max_count)
 {
     memset(sem, 0, sizeof(*sem));
     sem->_max_count = max_count;
@@ -252,7 +252,7 @@ static int __cdecl _usem_init(struct _usem *sem, short initial_count, short max_
     return 1;
 }
 
-static void __cdecl _usem_destroy(struct _usem *sem)
+static void _usem_destroy(struct _usem *sem)
 {
 #if defined(_WIN32)
     CloseHandle(sem->_event);
@@ -266,7 +266,7 @@ static void __cdecl _usem_destroy(struct _usem *sem)
 // Acquire semaphore. If we had to wait and the wait was not satisfied, 
 // return 0 else return 1
 //
-static int __cdecl _usem_acquire(struct _usem *sem)
+static int _usem_acquire(struct _usem *sem)
 {
     int result = 1;
     struct _mcs_node *mnode = &THREAD_DATA->sem_lock;
@@ -290,7 +290,7 @@ static int __cdecl _usem_acquire(struct _usem *sem)
     return result;
 }
 
-static int __cdecl _usem_release(struct _usem *sem)
+static int _usem_release(struct _usem *sem)
 {
     struct _mcs_node *mnode = &THREAD_DATA->sem_lock;
 
@@ -314,7 +314,7 @@ static int __cdecl _usem_release(struct _usem *sem)
 * depends on underlying OS event implementation: reasonably fair under NT
 * but very unfair under OS/2.
 */
-int __cdecl _cnd_init(cnd_t* cond)
+int _cnd_init(cnd_t* cond)
 {
     cond->_waiters = 0;
     cond->_wakeups = 0;
@@ -341,13 +341,13 @@ int __cdecl _cnd_init(cnd_t* cond)
     return thrd_success;
 }
 
-int __cdecl cnd_init(cnd_t *cond)
+int cnd_init(cnd_t *cond)
 {
     call_once_init_stdthread();
     return _cnd_init(cond);
 }
 
-void __cdecl cnd_destroy(cnd_t* cond)
+void cnd_destroy(cnd_t* cond)
 {
     mtx_destroy(&cond->_mtx);
 #if defined(_WIN32)
@@ -370,7 +370,7 @@ static void _cnd_decrement_waiters(cnd_t *cond)
     mtx_unlock(&cond->_mtx);
 }
 
-int __cdecl cnd_wait(cnd_t *cond, mtx_t *mtx)
+int cnd_wait(cnd_t *cond, mtx_t *mtx)
 {
     //
     // It does not seem advantageous to wait when _wakeups > 0 since 
@@ -415,7 +415,7 @@ int __cdecl cnd_wait(cnd_t *cond, mtx_t *mtx)
     return thrd_success;
 }
 
-int __cdecl cnd_signal(cnd_t* cond)
+int cnd_signal(cnd_t* cond)
 {
 	mtx_lock(&cond->_mtx);    
     if (cond->_wakeups < cond->_waiters) {
@@ -429,7 +429,7 @@ int __cdecl cnd_signal(cnd_t* cond)
     return thrd_success;
 }
 
-int __cdecl cnd_broadcast(cnd_t* cond)
+int cnd_broadcast(cnd_t* cond)
 {
 	mtx_lock(&cond->_mtx);    
     if (cond->_wakeups < cond->_waiters) {
@@ -443,7 +443,7 @@ int __cdecl cnd_broadcast(cnd_t* cond)
     return thrd_success;
 }
 
-int __cdecl _mtx_init(mtx_t* mtx, int type)
+int _mtx_init(mtx_t* mtx, int type)
 {
     if (type & mtx_recursive) {
         fprintf(stderr, "FATAL: stdthrd: Recursive mutexes are not currently supported.\n");
@@ -455,18 +455,18 @@ int __cdecl _mtx_init(mtx_t* mtx, int type)
     return _usem_init(&mtx->_wait_sem, 0, _MAX_SEM) ? thrd_success : thrd_error;
 }
 
-int __cdecl mtx_init(mtx_t *mtx, int type)
+int mtx_init(mtx_t *mtx, int type)
 {
     call_once_init_stdthread();
     return _mtx_init(mtx, type);
 }
 
-void __cdecl mtx_destroy(mtx_t* mtx)
+void mtx_destroy(mtx_t* mtx)
 {
     _usem_destroy(&mtx->_wait_sem);
 }
 
-int __cdecl mtx_trylock(mtx_t* mtx)
+int mtx_trylock(mtx_t* mtx)
 {
 #if defined(_M_IX86) && _M_IX86 == 300
     return _locked_exchange(&mtx->_lock, 1) ? thrd_error : thrd_success;
@@ -475,7 +475,7 @@ int __cdecl mtx_trylock(mtx_t* mtx)
 #endif
 }
 
-int __cdecl mtx_lock(mtx_t* mtx)
+int mtx_lock(mtx_t* mtx)
 {
 #if defined(_M_IX86) && _M_IX86 == 300
     // Special version for 386 so we don't have to use global spinlock
@@ -500,7 +500,7 @@ int __cdecl mtx_lock(mtx_t* mtx)
     return thrd_success;
 }
 
-int __cdecl mtx_unlock(mtx_t* mtx)
+int mtx_unlock(mtx_t* mtx)
 {
 #if defined(_M_IX86) && _M_IX86 == 300
     if (_locked_exchange(&mtx->_lock, 0)) {

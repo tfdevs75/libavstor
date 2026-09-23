@@ -42,12 +42,6 @@
 #define TEST_DB "test.db"
 #define LEVEL_COUNT 3
 
-#if defined(__x86_64__) || defined(_M_AMD64)
-#define AVS_THREADPROC_CALL
-#else
-#define AVS_THREADPROC_CALL __cdecl
-#endif
-
 struct dfs_create_db_param {
     const char        *filename;
     unsigned    cache_size;
@@ -316,8 +310,7 @@ struct dfs_thread_param {
     int64_t actual_sum_values;
 };
 
-static int AVS_THREADPROC_CALL 
-dfs_thread_func_mt(void *param)
+static int dfs_thread_func_mt(void *param)
 {
     struct dfs_thread_param *p = (struct dfs_thread_param*)param;
     avstor_node parent;

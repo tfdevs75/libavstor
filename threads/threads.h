@@ -137,44 +137,44 @@ extern void* __ThreadStackAddr;
 
 #endif
 
-typedef int (__cdecl *thrd_start_t)(void*);
+typedef int (*thrd_start_t)(void*);
 
-int __cdecl _thrd_create_ex(thrd_t *thr, thrd_start_t func, void *arg, void *stack_bottom, size_t stack_size);
-int __cdecl thrd_create(thrd_t *thr, thrd_start_t func, void *arg);
+int _thrd_create_ex(thrd_t *thr, thrd_start_t func, void *arg, void *stack_bottom, size_t stack_size);
+int thrd_create(thrd_t *thr, thrd_start_t func, void *arg);
 
-thrd_t __cdecl thrd_current(void);
-int __cdecl thrd_detach(thrd_t thr);
-int __cdecl thrd_equal(thrd_t lhs, thrd_t rhs);
+thrd_t thrd_current(void);
+int thrd_detach(thrd_t thr);
+int thrd_equal(thrd_t lhs, thrd_t rhs);
 
 #if (defined(__clang__) || defined(__GNUC__))
 __attribute__((noreturn))
 #elif !defined(_MSC_VER) || _MSC_VER >= 1200
 __declspec(noreturn)
 #endif
-void __cdecl thrd_exit(int res);
+void thrd_exit(int res);
 
-int __cdecl thrd_join(thrd_t thr, int* res);
-int __cdecl thrd_sleep(const struct timespec* duration, struct timespec* remaining);
-void __cdecl thrd_yield(void);
+int thrd_join(thrd_t thr, int* res);
+int thrd_sleep(const struct timespec* duration, struct timespec* remaining);
+void thrd_yield(void);
 
-void __cdecl mtx_destroy(mtx_t* mtx);
-int __cdecl mtx_init(mtx_t* mtx, int type);
-int __cdecl mtx_trylock(mtx_t* mtx);
-int __cdecl mtx_lock(mtx_t* mtx);
-int __cdecl mtx_unlock(mtx_t* mtx);
+void mtx_destroy(mtx_t* mtx);
+int mtx_init(mtx_t* mtx, int type);
+int mtx_trylock(mtx_t* mtx);
+int mtx_lock(mtx_t* mtx);
+int mtx_unlock(mtx_t* mtx);
 
-int __cdecl cnd_init(cnd_t* cond);
-void __cdecl cnd_destroy(cnd_t* cond);
-int __cdecl cnd_signal(cnd_t* cond);
-int __cdecl cnd_broadcast(cnd_t* cond);
-int __cdecl cnd_wait(cnd_t* cond, mtx_t* mtx);
+int cnd_init(cnd_t* cond);
+void cnd_destroy(cnd_t* cond);
+int cnd_signal(cnd_t* cond);
+int cnd_broadcast(cnd_t* cond);
+int cnd_wait(cnd_t* cond, mtx_t* mtx);
 
-int __cdecl tss_create(tss_t *tss_key, tss_dtor_t destructor);
-int __cdecl tss_delete(tss_t tss_id);
-int __cdecl tss_set(tss_t tss_id, void *val);
-void* __cdecl tss_get(tss_t tss_key);
+int tss_create(tss_t *tss_key, tss_dtor_t destructor);
+int tss_delete(tss_t tss_id);
+int tss_set(tss_t tss_id, void *val);
+void* tss_get(tss_t tss_key);
 
-void __cdecl call_once(once_flag* flag, void(*_Func)(void));
+void call_once(once_flag* flag, void(*_Func)(void));
 
 #ifdef __cplusplus
 }
