@@ -69,6 +69,10 @@
 #pragma warning(disable:4996) // deprecated
 #endif 
 
+#if defined(__BYTE_ORDER__) && __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__ && !defined(__LITTLE_ENDIAN__)
+#define __LITTLE_ENDIAN__ 1
+#endif
+
 static const char *AVS_TARGET_ARCH =
 #if defined(__amd64) || defined(__amd64__) || defined(__x86_64) || defined(__x86_64__)
 "x86_64"
