@@ -39,6 +39,22 @@
 
 #include "stdatomic.h"
 
+#if !defined(__cplusplus) || __cplusplus < 201103L
+#if defined(_WIN32) || defined(__unix__)
+#if defined(__WATCOMC__) || defined(_MSC_VER)
+#define thread_local __declspec(thread)
+#elif defined(__clang__) || defined(__GNUC__) || defined(__BORLANDC__)
+#define thread_local __thread
+#else
+#error "Define thread_local for compiler"
+#endif
+#elif defined(__DOS__) || defined(_DOS) || defined(MSDOS) || defined(__OS2__)
+#define thread_local
+#else
+#error "Define thread_local for platform"
+#endif
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
