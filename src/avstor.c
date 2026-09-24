@@ -127,6 +127,12 @@
 #endif
 #endif
 
+#if !defined(USE_STDTHRD_TLS) && !defined(_WINDLL)
+#define THREAD_LOCAL thread_local
+#else
+#define THREAD_LOCAL
+#endif
+
 #else 
 
 #define atomic_inc_int(obj)                   (++(*(obj)))
@@ -134,31 +140,14 @@
 #define atomic_load_int_acquire(obj)          (*(obj))
 #define atomic_store_int_release(obj,value)   (void)(*(obj) = (value))
 
+#define THREAD_LOCAL
+
 #endif
 
 #if !defined(offsetof)
 #define offsetof(t, d)          ((size_t)&((t*)(0))->d)
 #endif
 
-#if !defined(USE_STDTHRD_TLS)
-#if (defined(_WIN32) && !defined(_WINDLL)) || defined(__unix__)
-#if defined(__WATCOMC__) || defined(_MSC_VER)
-#define THREAD_LOCAL __declspec(thread)
-#elif defined(__clang__) || defined(__GNUC__) || defined(__BORLANDC__)
-#define THREAD_LOCAL __thread
-#else
-#define THREAD_LOCAL
-#error "Define THREAD_LOCAL for compiler"
-#endif
-#elif defined(__DOS__) || defined(_DOS) || defined(MSDOS) || defined(__OS2__)
-#define THREAD_LOCAL
-#elif !defined(_WINDLL)
-#define THREAD_LOCAL
-#error "Define THREAD_LOCAL for platform"
-#endif
-#else
-#define THREAD_LOCAL
-#endif
 // Workaround for IntelliSense Clang bug (https://github.com/microsoft/vscode-cpptools/issues/11585)
 //#if defined(__clang__) && defined(_WIN32) && defined(UINT32_MAX)
 //#undef UINT32_MAX
