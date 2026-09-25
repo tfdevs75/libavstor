@@ -32,6 +32,7 @@
 */
 
 #include <stddef.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -46,7 +47,7 @@
 typedef struct consumer {
     thrd_t thr;
     unsigned long consumed;
-    __int64 total;
+    int64_t total;
 } consumer_t;
 
 typedef struct producer {
@@ -165,7 +166,7 @@ static int cons_func(void *param)
             mtx_unlock(&_mtx_queue);
 
             p->consumed++;
-            p->total += (__int64)item;
+            p->total += (int64_t)item;
             mtx_lock(&_mtx_queue);
         }
         else if (die) {
@@ -187,8 +188,8 @@ int main(void)
 {
     clock_t start_time, end_time;
     const long num = iterations / total_prod;
-    __int64 total = 0;
-    const __int64 expected_total = (__int64)(iterations / 2) * (__int64)(iterations + 1);
+    int64_t total = 0;
+    const int64_t expected_total = (int64_t)(iterations / 2) * (int64_t)(iterations + 1);
     int i;
     double diff;
 
