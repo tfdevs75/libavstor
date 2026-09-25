@@ -48,6 +48,11 @@ HAS_NO_STDTHREADS = $(shell $(CC) -lstdthreads /dev/null 2>/dev/stdout | grep -c
 
 ifeq ($(THREAD_SAFE), 1)
 	CFLAGS += -DAVSTOR_CONFIG_THREAD_SAFE=1
+	
+	# Force linking of libstdthreads on FreeBSD
+	ifeq ($(OS_NAME), FreeBSD)
+		LINK_STDTHREADS = 1
+	endif
 	ifeq ($(CUSTOM_STDTHREADS), 1)
 		CFLAGS += -I./threads
 		LDFLAGS += -L./threads/bin
