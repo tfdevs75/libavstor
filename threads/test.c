@@ -36,7 +36,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-#include "threads.h"
+#include <threads.h>
 
 #define iterations 100000
 #define total_prod 4
