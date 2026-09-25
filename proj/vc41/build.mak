@@ -77,8 +77,8 @@ NULL=nul
 OUTDIR=.\bin\Release
 INTDIR=.\avstest\Release
 
-ALL :     "avstor - Win32 Release" "stdthrd - Win32 Release"\
-     "$(OUTDIR)\avstest.exe"
+ALL :       "avstor - Win32 Release" "stdthrd - Win32 Release"\
+       "$(OUTDIR)\avstest.exe"
 
 "$(OUTDIR)" :
     if not exist "$(OUTDIR)/$(NULL)" mkdir "$(OUTDIR)"
@@ -155,8 +155,8 @@ LINK32_OBJS= \
 OUTDIR=.\bin\Debug
 INTDIR=.\avstest\Debug
 
-ALL :     "avstor - Win32 Debug" "stdthrd - Win32 Debug"\
- "$(OUTDIR)\avstest.exe"
+ALL :       "avstor - Win32 Debug" "stdthrd - Win32 Debug"\
+   "$(OUTDIR)\avstest.exe"
 
 "$(OUTDIR)" :
     if not exist "$(OUTDIR)/$(NULL)" mkdir "$(OUTDIR)"
@@ -233,7 +233,7 @@ LINK32_OBJS= \
 OUTDIR=.\bin\Release
 INTDIR=.\stdthrd\Release
 
-ALL :     "$(OUTDIR)\stdthrd.lib"
+ALL :       "$(OUTDIR)\stdthrd.lib"
 
 "$(OUTDIR)" :
     if not exist "$(OUTDIR)/$(NULL)" mkdir "$(OUTDIR)"
@@ -303,7 +303,7 @@ LIB32_OBJS= \
 OUTDIR=.\bin\Debug
 INTDIR=.\stdthrd\Debug
 
-ALL :     "$(OUTDIR)\stdthrd.lib"
+ALL :       "$(OUTDIR)\stdthrd.lib"
 
 "$(OUTDIR)" :
     if not exist "$(OUTDIR)/$(NULL)" mkdir "$(OUTDIR)"
@@ -373,7 +373,7 @@ LIB32_OBJS= \
 OUTDIR=.\bin\Release
 INTDIR=.\testthrd\Release
 
-ALL :     "stdthrd - Win32 Release" "$(OUTDIR)\testthrd.exe"
+ALL :       "stdthrd - Win32 Release" "$(OUTDIR)\testthrd.exe"
 
 "$(OUTDIR)" :
     if not exist "$(OUTDIR)/$(NULL)" mkdir "$(OUTDIR)"
@@ -444,7 +444,7 @@ LINK32_OBJS= \
 OUTDIR=.\bin\Debug
 INTDIR=.\testthrd\Debug
 
-ALL :     "stdthrd - Win32 Debug" "$(OUTDIR)\testthrd.exe"
+ALL :       "stdthrd - Win32 Debug" "$(OUTDIR)\testthrd.exe"
 
 "$(OUTDIR)" :
     if not exist "$(OUTDIR)/$(NULL)" mkdir "$(OUTDIR)"
@@ -516,7 +516,7 @@ LINK32_OBJS= \
 OUTDIR=.\bin\Release
 INTDIR=.\avstor\Release
 
-ALL :     "$(OUTDIR)\avstor.lib"
+ALL :       "$(OUTDIR)\avstor.lib"
 
 "$(OUTDIR)" :
     if not exist "$(OUTDIR)/$(NULL)" mkdir "$(OUTDIR)"
@@ -584,7 +584,7 @@ LIB32_OBJS= \
 OUTDIR=.\bin\Debug
 INTDIR=.\avstor\Debug
 
-ALL :     "$(OUTDIR)\avstor.lib"
+ALL :       "$(OUTDIR)\avstor.lib"
 
 "$(OUTDIR)" :
     if not exist "$(OUTDIR)/$(NULL)" mkdir "$(OUTDIR)"
@@ -652,11 +652,11 @@ LIB32_OBJS= \
 OUTDIR=.\bin\MIPSDbg
 INTDIR=.\avstor\MIPSDbg
 
-ALL : "$(OUTDIR)\avstor.lib"
+ALL : ".\bin\MIPSDbg\avstor.lib"
 
 CLEAN : 
-	-@erase "$(INTDIR)\avstor.obj"
-	-@erase "$(OUTDIR)\avstor.lib"
+	-@erase ".\avstor\MIPSDbg\avstor.obj"
+	-@erase ".\bin\MIPSDbg\avstor.lib"
 
 "$(OUTDIR)" :
     if not exist "$(OUTDIR)/$(NULL)" mkdir "$(OUTDIR)"
@@ -696,9 +696,9 @@ LIB32=link.exe -lib
 # ADD LIB32 /nologo
 LIB32_FLAGS=/nologo /out:"$(OUTDIR)/avstor.lib" 
 LIB32_OBJS= \
-	"$(INTDIR)\avstor.obj"
+	".\avstor\MIPSDbg\avstor.obj"
 
-"$(OUTDIR)\avstor.lib" : "$(OUTDIR)" $(DEF_FILE) $(LIB32_OBJS)
+".\bin\MIPSDbg\avstor.lib" : "$(OUTDIR)" $(DEF_FILE) $(LIB32_OBJS)
     $(LIB32) @<<
   $(LIB32_FLAGS) $(DEF_FLAGS) $(LIB32_OBJS)
 <<
@@ -725,11 +725,11 @@ BSC32_SBRS= \
 OUTDIR=.\bin\MIPSRel
 INTDIR=.\avstor\MIPSRel
 
-ALL : "$(OUTDIR)\avstor.lib"
+ALL : ".\bin\MIPSRel\avstor.lib"
 
 CLEAN : 
-	-@erase "$(INTDIR)\avstor.obj"
-	-@erase "$(OUTDIR)\avstor.lib"
+	-@erase ".\avstor\MIPSRel\avstor.obj"
+	-@erase ".\bin\MIPSRel\avstor.lib"
 
 "$(OUTDIR)" :
     if not exist "$(OUTDIR)/$(NULL)" mkdir "$(OUTDIR)"
@@ -769,9 +769,9 @@ LIB32=link.exe -lib
 # ADD LIB32 /nologo
 LIB32_FLAGS=/nologo /out:"$(OUTDIR)/avstor.lib" 
 LIB32_OBJS= \
-	"$(INTDIR)\avstor.obj"
+	".\avstor\MIPSRel\avstor.obj"
 
-"$(OUTDIR)\avstor.lib" : "$(OUTDIR)" $(DEF_FILE) $(LIB32_OBJS)
+".\bin\MIPSRel\avstor.lib" : "$(OUTDIR)" $(DEF_FILE) $(LIB32_OBJS)
     $(LIB32) @<<
   $(LIB32_FLAGS) $(DEF_FLAGS) $(LIB32_OBJS)
 <<
@@ -799,14 +799,14 @@ OUTDIR=.\bin\MIPSRel
 INTDIR=.\avstest\MIPSRel
 
 ALL : "avstor - Win32 MIPSRel" "stdthrd - Win32 MIPSRel"\
- "$(OUTDIR)\avstest.exe"
+ ".\bin\MIPSRel\avstest.exe"
 
 CLEAN : 
-	-@erase "$(INTDIR)\avsdb.obj"
-	-@erase "$(INTDIR)\avstest.obj"
-	-@erase "$(INTDIR)\timer.obj"
-	-@erase "$(INTDIR)\tst_dfs.obj"
-	-@erase "$(OUTDIR)\avstest.exe"
+	-@erase ".\avstest\MIPSRel\avsdb.obj"
+	-@erase ".\avstest\MIPSRel\avstest.obj"
+	-@erase ".\avstest\MIPSRel\timer.obj"
+	-@erase ".\avstest\MIPSRel\tst_dfs.obj"
+	-@erase ".\bin\MIPSRel\avstest.exe"
 
 "$(OUTDIR)" :
     if not exist "$(OUTDIR)/$(NULL)" mkdir "$(OUTDIR)"
@@ -852,14 +852,14 @@ LINK32_FLAGS=kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib\
  /subsystem:console /incremental:no /pdb:"$(OUTDIR)/avstest.pdb" /machine:MIPS\
  /out:"$(OUTDIR)/avstest.exe" 
 LINK32_OBJS= \
-	"$(INTDIR)\avsdb.obj" \
-	"$(INTDIR)\avstest.obj" \
-	"$(INTDIR)\timer.obj" \
-	"$(INTDIR)\tst_dfs.obj" \
-	"$(OUTDIR)\avstor.lib" \
-	"$(OUTDIR)\stdthrd.lib"
+	".\avstest\MIPSRel\avsdb.obj" \
+	".\avstest\MIPSRel\avstest.obj" \
+	".\avstest\MIPSRel\timer.obj" \
+	".\avstest\MIPSRel\tst_dfs.obj" \
+	".\bin\MIPSRel\avstor.lib" \
+	".\bin\MIPSRel\stdthrd.lib"
 
-"$(OUTDIR)\avstest.exe" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
+".\bin\MIPSRel\avstest.exe" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
     $(LINK32) @<<
   $(LINK32_FLAGS) $(LINK32_OBJS)
 <<
@@ -887,17 +887,17 @@ OUTDIR=.\bin\MIPSDbg
 INTDIR=.\avstest\MIPSDbg
 
 ALL : "avstor - Win32 MIPSDbg" "stdthrd - Win32 MIPSDbg"\
- "$(OUTDIR)\avstest.exe"
+ ".\bin\MIPSDbg\avstest.exe"
 
 CLEAN : 
-	-@erase "$(INTDIR)\avsdb.obj"
-	-@erase "$(INTDIR)\avstest.obj"
-	-@erase "$(INTDIR)\timer.obj"
-	-@erase "$(INTDIR)\tst_dfs.obj"
-	-@erase "$(INTDIR)\vc40.pdb"
-	-@erase "$(OUTDIR)\avstest.exe"
-	-@erase "$(OUTDIR)\avstest.ilk"
-	-@erase "$(OUTDIR)\avstest.pdb"
+	-@erase ".\avstest\MIPSDbg\avsdb.obj"
+	-@erase ".\avstest\MIPSDbg\avstest.obj"
+	-@erase ".\avstest\MIPSDbg\timer.obj"
+	-@erase ".\avstest\MIPSDbg\tst_dfs.obj"
+	-@erase ".\avstest\MIPSDbg\vc40.pdb"
+	-@erase ".\bin\MIPSDbg\avstest.exe"
+	-@erase ".\bin\MIPSDbg\avstest.ilk"
+	-@erase ".\bin\MIPSDbg\avstest.pdb"
 
 "$(OUTDIR)" :
     if not exist "$(OUTDIR)/$(NULL)" mkdir "$(OUTDIR)"
@@ -946,14 +946,14 @@ LINK32_FLAGS=kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib\
  /subsystem:console /incremental:yes /pdb:"$(OUTDIR)/avstest.pdb" /debug\
  /machine:MIPS /out:"$(OUTDIR)/avstest.exe" 
 LINK32_OBJS= \
-	"$(INTDIR)\avsdb.obj" \
-	"$(INTDIR)\avstest.obj" \
-	"$(INTDIR)\timer.obj" \
-	"$(INTDIR)\tst_dfs.obj" \
-	"$(OUTDIR)\avstor.lib" \
-	"$(OUTDIR)\stdthrd.lib"
+	".\avstest\MIPSDbg\avsdb.obj" \
+	".\avstest\MIPSDbg\avstest.obj" \
+	".\avstest\MIPSDbg\timer.obj" \
+	".\avstest\MIPSDbg\tst_dfs.obj" \
+	".\bin\MIPSDbg\avstor.lib" \
+	".\bin\MIPSDbg\stdthrd.lib"
 
-"$(OUTDIR)\avstest.exe" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
+".\bin\MIPSDbg\avstest.exe" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
     $(LINK32) @<<
   $(LINK32_FLAGS) $(LINK32_OBJS)
 <<
@@ -980,13 +980,13 @@ BSC32_SBRS= \
 OUTDIR=.\bin\MIPSRel
 INTDIR=.\stdthrd\MIPSRel
 
-ALL : "$(OUTDIR)\stdthrd.lib"
+ALL : ".\bin\MIPSRel\stdthrd.lib"
 
 CLEAN : 
-	-@erase "$(INTDIR)\atomics.obj"
-	-@erase "$(INTDIR)\sync.obj"
-	-@erase "$(INTDIR)\thrd.obj"
-	-@erase "$(OUTDIR)\stdthrd.lib"
+	-@erase ".\bin\MIPSRel\stdthrd.lib"
+	-@erase ".\stdthrd\MIPSRel\atomics.obj"
+	-@erase ".\stdthrd\MIPSRel\sync.obj"
+	-@erase ".\stdthrd\MIPSRel\thrd.obj"
 
 "$(OUTDIR)" :
     if not exist "$(OUTDIR)/$(NULL)" mkdir "$(OUTDIR)"
@@ -997,7 +997,6 @@ CLEAN :
 CPP=cl.exe
 # ADD BASE CPP /nologo /Gt0 /QMOb2000 /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /YX /c
 # ADD CPP /nologo /QMR4600 /MT /Gt0 /QMOb2000 /W3 /GX /O2 /I "..\..\threads" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /YX /c
-# SUBTRACT CPP /Z<none>
 CPP_PROJ=/nologo /QMR4600 /MT /Gt0 /QMOb2000 /W3 /GX /O2 /I "..\..\threads" /D\
  "WIN32" /D "NDEBUG" /D "_WINDOWS" /Fp"$(INTDIR)/stdthrd.pch" /YX\
  /Fo"$(INTDIR)/" /c 
@@ -1027,11 +1026,11 @@ LIB32=link.exe -lib
 # ADD LIB32 /nologo
 LIB32_FLAGS=/nologo /out:"$(OUTDIR)/stdthrd.lib" 
 LIB32_OBJS= \
-	"$(INTDIR)\atomics.obj" \
-	"$(INTDIR)\sync.obj" \
-	"$(INTDIR)\thrd.obj"
+	".\stdthrd\MIPSRel\atomics.obj" \
+	".\stdthrd\MIPSRel\sync.obj" \
+	".\stdthrd\MIPSRel\thrd.obj"
 
-"$(OUTDIR)\stdthrd.lib" : "$(OUTDIR)" $(DEF_FILE) $(LIB32_OBJS)
+".\bin\MIPSRel\stdthrd.lib" : "$(OUTDIR)" $(DEF_FILE) $(LIB32_OBJS)
     $(LIB32) @<<
   $(LIB32_FLAGS) $(DEF_FLAGS) $(LIB32_OBJS)
 <<
@@ -1058,13 +1057,13 @@ BSC32_SBRS= \
 OUTDIR=.\bin\MIPSDbg
 INTDIR=.\stdthrd\MIPSDbg
 
-ALL : "$(OUTDIR)\stdthrd.lib"
+ALL : ".\bin\MIPSDbg\stdthrd.lib"
 
 CLEAN : 
-	-@erase "$(INTDIR)\atomics.obj"
-	-@erase "$(INTDIR)\sync.obj"
-	-@erase "$(INTDIR)\thrd.obj"
-	-@erase "$(OUTDIR)\stdthrd.lib"
+	-@erase ".\bin\MIPSDbg\stdthrd.lib"
+	-@erase ".\stdthrd\MIPSDbg\atomics.obj"
+	-@erase ".\stdthrd\MIPSDbg\sync.obj"
+	-@erase ".\stdthrd\MIPSDbg\thrd.obj"
 
 "$(OUTDIR)" :
     if not exist "$(OUTDIR)/$(NULL)" mkdir "$(OUTDIR)"
@@ -1104,11 +1103,11 @@ LIB32=link.exe -lib
 # ADD LIB32 /nologo
 LIB32_FLAGS=/nologo /out:"$(OUTDIR)/stdthrd.lib" 
 LIB32_OBJS= \
-	"$(INTDIR)\atomics.obj" \
-	"$(INTDIR)\sync.obj" \
-	"$(INTDIR)\thrd.obj"
+	".\stdthrd\MIPSDbg\atomics.obj" \
+	".\stdthrd\MIPSDbg\sync.obj" \
+	".\stdthrd\MIPSDbg\thrd.obj"
 
-"$(OUTDIR)\stdthrd.lib" : "$(OUTDIR)" $(DEF_FILE) $(LIB32_OBJS)
+".\bin\MIPSDbg\stdthrd.lib" : "$(OUTDIR)" $(DEF_FILE) $(LIB32_OBJS)
     $(LIB32) @<<
   $(LIB32_FLAGS) $(DEF_FLAGS) $(LIB32_OBJS)
 <<
@@ -1135,11 +1134,12 @@ BSC32_SBRS= \
 OUTDIR=.\bin\MIPSRel
 INTDIR=.\testthrd\MIPSRel
 
-ALL : "stdthrd - Win32 MIPSRel" "$(OUTDIR)\testthrd.exe"
+ALL : "stdthrd - Win32 MIPSRel" ".\bin\MIPSRel\testthrd.exe"
 
 CLEAN : 
-	-@erase "$(INTDIR)\test.obj"
-	-@erase "$(OUTDIR)\testthrd.exe"
+	-@erase ".\bin\MIPSRel\testthrd.exe"
+	-@erase ".\testthrd\MIPSRel\test.obj"
+	-@erase ".\testthrd\MIPSRel\timer.obj"
 
 "$(OUTDIR)" :
     if not exist "$(OUTDIR)/$(NULL)" mkdir "$(OUTDIR)"
@@ -1150,7 +1150,6 @@ CLEAN :
 CPP=cl.exe
 # ADD BASE CPP /nologo /Gt0 /QMOb2000 /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_CONSOLE" /YX /c
 # ADD CPP /nologo /MT /Gt0 /QMOb2000 /W3 /GX /O2 /I "..\..\threads" /D "WIN32" /D "NDEBUG" /D "_CONSOLE" /YX /c
-# SUBTRACT CPP /Z<none>
 CPP_PROJ=/nologo /MT /Gt0 /QMOb2000 /W3 /GX /O2 /I "..\..\threads" /D "WIN32"\
  /D "NDEBUG" /D "_CONSOLE" /Fp"$(INTDIR)/testthrd.pch" /YX /Fo"$(INTDIR)/" /c 
 CPP_OBJS=.\testthrd\MIPSRel/
@@ -1186,10 +1185,11 @@ LINK32_FLAGS=kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib\
  /subsystem:console /incremental:no /pdb:"$(OUTDIR)/testthrd.pdb" /machine:MIPS\
  /out:"$(OUTDIR)/testthrd.exe" 
 LINK32_OBJS= \
-	"$(INTDIR)\test.obj" \
-	"$(OUTDIR)\stdthrd.lib"
+	".\bin\MIPSRel\stdthrd.lib" \
+	".\testthrd\MIPSRel\test.obj" \
+	".\testthrd\MIPSRel\timer.obj"
 
-"$(OUTDIR)\testthrd.exe" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
+".\bin\MIPSRel\testthrd.exe" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
     $(LINK32) @<<
   $(LINK32_FLAGS) $(LINK32_OBJS)
 <<
@@ -1216,14 +1216,15 @@ BSC32_SBRS= \
 OUTDIR=.\bin\MIPSDbg
 INTDIR=.\testthrd\MIPSDbg
 
-ALL : "stdthrd - Win32 MIPSDbg" "$(OUTDIR)\testthrd.exe"
+ALL : "stdthrd - Win32 MIPSDbg" ".\bin\MIPSDbg\testthrd.exe"
 
 CLEAN : 
-	-@erase "$(INTDIR)\test.obj"
-	-@erase "$(INTDIR)\vc40.pdb"
-	-@erase "$(OUTDIR)\testthrd.exe"
-	-@erase "$(OUTDIR)\testthrd.ilk"
-	-@erase "$(OUTDIR)\testthrd.pdb"
+	-@erase ".\bin\MIPSDbg\testthrd.exe"
+	-@erase ".\bin\MIPSDbg\testthrd.ilk"
+	-@erase ".\bin\MIPSDbg\testthrd.pdb"
+	-@erase ".\testthrd\MIPSDbg\test.obj"
+	-@erase ".\testthrd\MIPSDbg\timer.obj"
+	-@erase ".\testthrd\MIPSDbg\vc40.pdb"
 
 "$(OUTDIR)" :
     if not exist "$(OUTDIR)/$(NULL)" mkdir "$(OUTDIR)"
@@ -1271,10 +1272,11 @@ LINK32_FLAGS=kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib\
  /subsystem:console /incremental:yes /pdb:"$(OUTDIR)/testthrd.pdb" /debug\
  /machine:MIPS /out:"$(OUTDIR)/testthrd.exe" 
 LINK32_OBJS= \
-	"$(INTDIR)\test.obj" \
-	"$(OUTDIR)\stdthrd.lib"
+	".\bin\MIPSDbg\stdthrd.lib" \
+	".\testthrd\MIPSDbg\test.obj" \
+	".\testthrd\MIPSDbg\timer.obj"
 
-"$(OUTDIR)\testthrd.exe" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
+".\bin\MIPSDbg\testthrd.exe" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
     $(LINK32) @<<
   $(LINK32_FLAGS) $(LINK32_OBJS)
 <<
@@ -1380,7 +1382,7 @@ DEP_CPP_TST_D=\
 	{$(INCLUDE)}"\STDINT.H"\
 	
 
-"$(INTDIR)\tst_dfs.obj" : $(SOURCE) $(DEP_CPP_TST_D) "$(INTDIR)"
+".\avstest\MIPSRel\tst_dfs.obj" : $(SOURCE) $(DEP_CPP_TST_D) "$(INTDIR)"
    $(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -1395,7 +1397,7 @@ DEP_CPP_TST_D=\
 	{$(INCLUDE)}"\STDINT.H"\
 	
 
-"$(INTDIR)\tst_dfs.obj" : $(SOURCE) $(DEP_CPP_TST_D) "$(INTDIR)"
+".\avstest\MIPSDbg\tst_dfs.obj" : $(SOURCE) $(DEP_CPP_TST_D) "$(INTDIR)"
    $(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -1433,7 +1435,7 @@ DEP_CPP_TIMER=\
 	"..\..\tests\timer.h"\
 	
 
-"$(INTDIR)\timer.obj" : $(SOURCE) $(DEP_CPP_TIMER) "$(INTDIR)"
+".\avstest\MIPSRel\timer.obj" : $(SOURCE) $(DEP_CPP_TIMER) "$(INTDIR)"
    $(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -1443,7 +1445,7 @@ DEP_CPP_TIMER=\
 	"..\..\tests\timer.h"\
 	
 
-"$(INTDIR)\timer.obj" : $(SOURCE) $(DEP_CPP_TIMER) "$(INTDIR)"
+".\avstest\MIPSDbg\timer.obj" : $(SOURCE) $(DEP_CPP_TIMER) "$(INTDIR)"
    $(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -1496,7 +1498,7 @@ DEP_CPP_AVSTE=\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	
 
-"$(INTDIR)\avstest.obj" : $(SOURCE) $(DEP_CPP_AVSTE) "$(INTDIR)"
+".\avstest\MIPSRel\avstest.obj" : $(SOURCE) $(DEP_CPP_AVSTE) "$(INTDIR)"
    $(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -1511,7 +1513,7 @@ DEP_CPP_AVSTE=\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	
 
-"$(INTDIR)\avstest.obj" : $(SOURCE) $(DEP_CPP_AVSTE) "$(INTDIR)"
+".\avstest\MIPSDbg\avstest.obj" : $(SOURCE) $(DEP_CPP_AVSTE) "$(INTDIR)"
    $(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -1552,7 +1554,7 @@ DEP_CPP_AVSDB=\
 	{$(INCLUDE)}"\STDINT.H"\
 	
 
-"$(INTDIR)\avsdb.obj" : $(SOURCE) $(DEP_CPP_AVSDB) "$(INTDIR)"
+".\avstest\MIPSRel\avsdb.obj" : $(SOURCE) $(DEP_CPP_AVSDB) "$(INTDIR)"
    $(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -1563,7 +1565,7 @@ DEP_CPP_AVSDB=\
 	{$(INCLUDE)}"\STDINT.H"\
 	
 
-"$(INTDIR)\avsdb.obj" : $(SOURCE) $(DEP_CPP_AVSDB) "$(INTDIR)"
+".\avstest\MIPSDbg\avsdb.obj" : $(SOURCE) $(DEP_CPP_AVSDB) "$(INTDIR)"
    $(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -1657,7 +1659,7 @@ DEP_CPP_THRD_=\
 	{$(INCLUDE)}"\STDINT.H"\
 	
 
-"$(INTDIR)\thrd.obj" : $(SOURCE) $(DEP_CPP_THRD_) "$(INTDIR)"
+".\stdthrd\MIPSRel\thrd.obj" : $(SOURCE) $(DEP_CPP_THRD_) "$(INTDIR)"
    $(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -1670,7 +1672,7 @@ DEP_CPP_THRD_=\
 	{$(INCLUDE)}"\STDINT.H"\
 	
 
-"$(INTDIR)\thrd.obj" : $(SOURCE) $(DEP_CPP_THRD_) "$(INTDIR)"
+".\stdthrd\MIPSDbg\thrd.obj" : $(SOURCE) $(DEP_CPP_THRD_) "$(INTDIR)"
    $(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -1714,7 +1716,7 @@ DEP_CPP_SYNC_=\
 	"..\..\threads\threads.h"\
 	
 
-"$(INTDIR)\sync.obj" : $(SOURCE) $(DEP_CPP_SYNC_) "$(INTDIR)"
+".\stdthrd\MIPSRel\sync.obj" : $(SOURCE) $(DEP_CPP_SYNC_) "$(INTDIR)"
    $(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -1726,7 +1728,7 @@ DEP_CPP_SYNC_=\
 	"..\..\threads\threads.h"\
 	
 
-"$(INTDIR)\sync.obj" : $(SOURCE) $(DEP_CPP_SYNC_) "$(INTDIR)"
+".\stdthrd\MIPSDbg\sync.obj" : $(SOURCE) $(DEP_CPP_SYNC_) "$(INTDIR)"
    $(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -1764,7 +1766,7 @@ DEP_CPP_ATOMI=\
 	"..\..\threads\stdatomic.h"\
 	
 
-"$(INTDIR)\atomics.obj" : $(SOURCE) $(DEP_CPP_ATOMI) "$(INTDIR)"
+".\stdthrd\MIPSRel\atomics.obj" : $(SOURCE) $(DEP_CPP_ATOMI) "$(INTDIR)"
    $(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -1774,7 +1776,7 @@ DEP_CPP_ATOMI=\
 	"..\..\threads\stdatomic.h"\
 	
 
-"$(INTDIR)\atomics.obj" : $(SOURCE) $(DEP_CPP_ATOMI) "$(INTDIR)"
+".\stdthrd\MIPSDbg\atomics.obj" : $(SOURCE) $(DEP_CPP_ATOMI) "$(INTDIR)"
    $(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -1830,21 +1832,26 @@ DEP_CPP_TEST_=\
 !ELSEIF  "$(CFG)" == "testthrd - Win32 MIPSRel"
 
 DEP_CPP_TEST_=\
+	"..\..\tests\timer.h"\
+	"..\..\threads\stdatomic.h"\
 	"..\..\threads\threads.h"\
+	{$(INCLUDE)}"\STDINT.H"\
 	
 
-"$(INTDIR)\test.obj" : $(SOURCE) $(DEP_CPP_TEST_) "$(INTDIR)"
+".\testthrd\MIPSRel\test.obj" : $(SOURCE) $(DEP_CPP_TEST_) "$(INTDIR)"
    $(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "testthrd - Win32 MIPSDbg"
 
 DEP_CPP_TEST_=\
+	"..\..\tests\timer.h"\
 	"..\..\threads\stdatomic.h"\
 	"..\..\threads\threads.h"\
+	{$(INCLUDE)}"\STDINT.H"\
 	
 
-"$(INTDIR)\test.obj" : $(SOURCE) $(DEP_CPP_TEST_) "$(INTDIR)"
+".\testthrd\MIPSDbg\test.obj" : $(SOURCE) $(DEP_CPP_TEST_) "$(INTDIR)"
    $(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -1879,6 +1886,38 @@ DEP_CPP_TEST_=\
 !ENDIF 
 
 # End Project Dependency
+################################################################################
+# Begin Source File
+
+SOURCE=\repos\libavstor\tests\timer.c
+
+!IF  "$(CFG)" == "testthrd - Win32 Release"
+
+!ELSEIF  "$(CFG)" == "testthrd - Win32 Debug"
+
+!ELSEIF  "$(CFG)" == "testthrd - Win32 MIPSRel"
+
+DEP_CPP_TIMER=\
+	"..\..\tests\timer.h"\
+	
+
+".\testthrd\MIPSRel\timer.obj" : $(SOURCE) $(DEP_CPP_TIMER) "$(INTDIR)"
+   $(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+!ELSEIF  "$(CFG)" == "testthrd - Win32 MIPSDbg"
+
+DEP_CPP_TIMER=\
+	"..\..\tests\timer.h"\
+	
+
+".\testthrd\MIPSDbg\timer.obj" : $(SOURCE) $(DEP_CPP_TIMER) "$(INTDIR)"
+   $(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+!ENDIF 
+
+# End Source File
 # End Target
 ################################################################################
 # Begin Target
@@ -1940,7 +1979,7 @@ DEP_CPP_AVSTO=\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	
 
-"$(INTDIR)\avstor.obj" : $(SOURCE) $(DEP_CPP_AVSTO) "$(INTDIR)"
+".\avstor\MIPSDbg\avstor.obj" : $(SOURCE) $(DEP_CPP_AVSTO) "$(INTDIR)"
    $(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -1955,7 +1994,7 @@ DEP_CPP_AVSTO=\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	
 
-"$(INTDIR)\avstor.obj" : $(SOURCE) $(DEP_CPP_AVSTO) "$(INTDIR)"
+".\avstor\MIPSRel\avstor.obj" : $(SOURCE) $(DEP_CPP_AVSTO) "$(INTDIR)"
    $(CPP) $(CPP_PROJ) $(SOURCE)
 
 

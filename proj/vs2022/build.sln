@@ -66,5 +66,6 @@ Global
 		tests.Shared\tests.Shared.vcxitems*{5c9282a1-d29f-4836-a5a7-e8133b0ee641}*SharedItemsImports = 4
 		tests.Shared\tests.Shared.vcxitems*{6a19148f-49ce-42f5-80ad-2d112c396342}*SharedItemsImports = 4
 		tests.Shared\tests.Shared.vcxitems*{b2ab1ea0-1f47-477d-99dd-a2e298b20452}*SharedItemsImports = 9
+		tests.Shared\tests.Shared.vcxitems*{be0225f7-a61c-4b67-bb72-6916b0ca72c0}*SharedItemsImports = 4
 	EndGlobalSection
 EndGlobal

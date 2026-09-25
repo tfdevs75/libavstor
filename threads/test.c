@@ -35,7 +35,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
+#include "../tests/timer.h"
 
 #include <threads.h>
 
@@ -186,12 +186,11 @@ thrd_t threads[total_prod + total_cons];
 
 int main(void)
 {
-    clock_t start_time, end_time;
+    Timer tm;
     const long num = iterations / total_prod;
     int64_t total = 0;
     const int64_t expected_total = (int64_t)(iterations / 2) * (int64_t)(iterations + 1);
     int i;
-    double diff;
 
     qu = queue_create(QUEUE_SIZE);
 
@@ -205,7 +204,7 @@ int main(void)
     done = total_prod;
     die = 0;
 
-    start_time = clock();
+    timer_start(&tm);
 
     for (i = 0; i < total_cons; i++) {
         cons[i].consumed = 0;
@@ -252,13 +251,13 @@ int main(void)
         printf("Consumer %i consumed %li items\n", i, cons[i].consumed);
     }
 
-    end_time = clock();
-    diff = (double)(end_time - start_time) / CLOCKS_PER_SEC;
+    timer_stop(&tm);
+
     if (total != expected_total) {
         printf("TEST FAILED! Expected total not equal to actual total.\n");
         return 1;
     }
-    printf("Elapsed time: %f\n", diff);
-    printf("Iterations per ms: %4.8G\n", (double)iterations / diff / 1000.0);
+    printf("Elapsed time: %f\n", tm.secs);
+    printf("Iterations per ms: %4.8G\n", (double)iterations / tm.secs / 1000.0);
     return 0;
 }
